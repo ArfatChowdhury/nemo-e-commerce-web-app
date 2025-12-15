@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { FiSearch, FiHeart, FiShoppingCart, FiUser, FiMenu } from "react-icons/fi";
+import logo from "@/public/final.png";
 
 export default function Navbar() {
     return (
@@ -12,10 +13,8 @@ export default function Navbar() {
                     <div className="flex-shrink-0 flex items-center">
                         <Link href="/">
                             <Image
-                                src="/nemo-logo-black.png"
+                                src={logo}
                                 alt="Nemo"
-                                width={5000}
-                                height={5000}
                                 className="h-42 w-auto object-contain"
                                 priority
                             />
