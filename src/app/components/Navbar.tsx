@@ -22,6 +22,13 @@ export default function Navbar() {
                         </Link>
                     </div>
 
+                    {/* Slogan Section */}
+                    <div className="hidden md:block absolute left-1/2 transform -translate-x-1/2">
+                        <span className="text-white font-normal text-xl tracking-[0.3em] uppercase [text-shadow:1px_2px_4px_rgba(0,0,0,0.5)]">
+                            R u n - L i k e - N e m o
+                        </span>
+                    </div>
+
                     {/* Right Navigation */}
                     <div className="hidden md:flex items-center space-x-8">
                         <Link href="/wishlist" className="flex items-center space-x-1 hover:text-teal-700 transition-colors group">
