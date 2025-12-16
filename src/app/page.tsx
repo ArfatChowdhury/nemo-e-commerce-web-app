@@ -1,10 +1,12 @@
-import Image from "next/image";
+
+import HotDealsCarosuel from "./components/HotDealsCarosuel";
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main>
+    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans ">
+      <main className="w-full max-w-7xl px-4 py-8">
 
+        <HotDealsCarosuel />
       </main>
     </div>
   );
