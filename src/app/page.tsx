@@ -1,4 +1,5 @@
 
+import HomePage from "./components/HomePage";
 import HotDealsCarosuel from "./components/HotDealsCarosuel";
 
 export default function Home() {
@@ -7,6 +8,7 @@ export default function Home() {
       <main className="w-full max-w-7xl px-4 py-8">
 
         <HotDealsCarosuel />
+        <HomePage />
       </main>
     </div>
   );
