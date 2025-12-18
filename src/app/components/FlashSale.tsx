@@ -1,23 +1,24 @@
-'use client';
+'use client'
 
 import React, { useState } from 'react'
-import ProductCard from './ProductCard';
+import ProductCard from './ProductCard'
 
-export default function NewArrivels({ products }: { products: any }) {
+export default function FlashSale({ products }: { products: any }) {
+
+
     const [limit, setLimit] = useState(4);
 
     const handleLoadMore = () => {
         setLimit(prevLimit => prevLimit + 4);
     }
 
-    const displayedProducts = [...products].reverse().slice(0, limit);
 
     return (
-        <div className="div">
+        <div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 px-4">
 
-                {displayedProducts.map((product: any) => (
+                {products.slice(0, limit).map((product: any) => (
                     <ProductCard key={product._id} product={product} />
                 ))}
             </div>
@@ -31,9 +32,6 @@ export default function NewArrivels({ products }: { products: any }) {
                     </button>
                 )}
             </div>
-
-
-
         </div>
     )
 }
