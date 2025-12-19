@@ -4,6 +4,8 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { FiShoppingCart, FiHeart } from 'react-icons/fi';
+import { useAppDispatch } from '@/app/store/hooks';
+import { addToCart, addToWishlist } from '@/app/store/slices/productFormSlice';
 
 interface Product {
     _id: string;
@@ -16,6 +18,8 @@ interface Product {
 }
 
 export default function ProductCard({ product }: { product: Product }) {
+    const dispatch = useAppDispatch();
+
     // Ensure we have an image fallbacks
     const imageUrl = product.images?.[0] || '/placeholder.png';
     const priceDisplay = typeof product.price === 'number'
@@ -39,7 +43,8 @@ export default function ProductCard({ product }: { product: Product }) {
                     <button
                         onClick={(e) => {
                             e.preventDefault();
-                            // Wishlist logic
+                            e.stopPropagation();
+                            dispatch(addToWishlist(product));
                         }}
                         className="absolute top-3 right-3 p-2 bg-white/80 backdrop-blur-sm rounded-full shadow-sm opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-white hover:text-red-500 translate-y-2 group-hover:translate-y-0 text-gray-600 z-10"
                     >
@@ -83,7 +88,13 @@ export default function ProductCard({ product }: { product: Product }) {
                         </span>
                     </div>
 
-                    <button className="flex items-center gap-2 bg-zinc-900 hover:bg-teal-600 text-white px-4 py-2.5 rounded-lg font-medium text-sm transition-colors duration-300 shadow-md hover:shadow-lg active:scale-95">
+                    <button
+                        onClick={(e) => {
+                            e.preventDefault();
+                            dispatch(addToCart(product));
+                        }}
+                        className="flex items-center gap-2 bg-zinc-900 hover:bg-teal-600 text-white px-4 py-2.5 rounded-lg font-medium text-sm transition-colors duration-300 shadow-md hover:shadow-lg active:scale-95"
+                    >
                         <FiShoppingCart size={16} />
                         <span>Add</span>
                     </button>

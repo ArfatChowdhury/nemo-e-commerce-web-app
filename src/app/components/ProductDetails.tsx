@@ -3,6 +3,8 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { FiShoppingCart, FiHeart, FiShield, FiTruck, FiRefreshCw, FiCheck } from 'react-icons/fi';
+import { useAppDispatch } from '@/app/store/hooks';
+import { addToCart, addToWishlist } from '@/app/store/slices/productFormSlice';
 
 interface Product {
     _id: string;
@@ -15,6 +17,7 @@ interface Product {
 }
 
 export default function ProductDetails({ product }: { product: Product }) {
+    const dispatch = useAppDispatch();
     const [selectedImage, setSelectedImage] = useState(0);
     const images = product.images || ['/placeholder.png'];
 
@@ -89,11 +92,17 @@ export default function ProductDetails({ product }: { product: Product }) {
 
                         {/* Actions */}
                         <div className="flex flex-col sm:flex-row gap-4 mb-10">
-                            <button className="flex-1 flex items-center justify-center gap-3 bg-zinc-900 text-white px-8 py-4 rounded-2xl font-bold hover:bg-teal-600 transition-all duration-300 shadow-xl hover:shadow-teal-200 active:scale-[0.98]">
+                            <button
+                                onClick={() => dispatch(addToCart(product))}
+                                className="flex-1 flex items-center justify-center gap-3 bg-zinc-900 text-white px-8 py-4 rounded-2xl font-bold hover:bg-teal-600 transition-all duration-300 shadow-xl hover:shadow-teal-200 active:scale-[0.98]"
+                            >
                                 <FiShoppingCart size={20} />
                                 Add to Cart
                             </button>
-                            <button className="px-8 py-4 rounded-2xl border-2 border-gray-100 text-gray-600 hover:bg-red-50 hover:border-red-100 hover:text-red-500 transition-all duration-300 active:scale-[0.98]">
+                            <button
+                                onClick={() => dispatch(addToWishlist(product))}
+                                className="px-8 py-4 rounded-2xl border-2 border-gray-100 text-gray-600 hover:bg-red-50 hover:border-red-100 hover:text-red-500 transition-all duration-300 active:scale-[0.98]"
+                            >
                                 <FiHeart size={20} />
                             </button>
                         </div>
