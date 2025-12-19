@@ -2,6 +2,16 @@ import getAllProducts from "../../../../lib/getAllProducts";
 import ProductCard from "@/app/components/ProductCard";
 import CategorySidebar from "@/app/components/CategorySidebar";
 
+export async function generateStaticParams() {
+    const products = await getAllProducts();
+    const categories = products.map((product: any) => product.category);
+    const uniqueCategories = Array.from(new Set(categories));
+
+    return uniqueCategories.map((category: any) => ({
+        category: encodeURIComponent(category),
+    }));
+}
+
 export default async function CategoryPage({ params }: { params: Promise<{ category: string }> }) {
     const { category: encodedCategory } = await params;
     const category = decodeURIComponent(encodedCategory);
