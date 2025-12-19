@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { FiShoppingCart, FiHeart } from 'react-icons/fi';
 
 interface Product {
@@ -24,27 +25,35 @@ export default function ProductCard({ product }: { product: Product }) {
     return (
         <div className="group relative bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 flex flex-col h-full">
             {/* Image Container */}
-            <div className="relative aspect-[4/3] w-full bg-gray-50 overflow-hidden">
-                <Image
-                    src={imageUrl}
-                    alt={product.productName}
-                    fill
-                    className="object-contain p-4 group-hover:scale-105 transition-transform duration-500"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                />
+            <Link href={`/product/${product._id}`} className="block">
+                <div className="relative aspect-[4/3] w-full bg-gray-50 overflow-hidden">
+                    <Image
+                        src={imageUrl}
+                        alt={product.productName}
+                        fill
+                        className="object-contain p-4 group-hover:scale-105 transition-transform duration-500"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    />
 
-                {/* Overlay Actions (Wishlist) */}
-                <button className="absolute top-3 right-3 p-2 bg-white/80 backdrop-blur-sm rounded-full shadow-sm opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-white hover:text-red-500 translate-y-2 group-hover:translate-y-0 text-gray-600">
-                    <FiHeart size={18} />
-                </button>
+                    {/* Overlay Actions (Wishlist) */}
+                    <button
+                        onClick={(e) => {
+                            e.preventDefault();
+                            // Wishlist logic
+                        }}
+                        className="absolute top-3 right-3 p-2 bg-white/80 backdrop-blur-sm rounded-full shadow-sm opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-white hover:text-red-500 translate-y-2 group-hover:translate-y-0 text-gray-600 z-10"
+                    >
+                        <FiHeart size={18} />
+                    </button>
 
-                {/* Badge (Optional - e.g. New or Category) */}
-                {product.category && (
-                    <span className="absolute top-3 left-3 px-2 py-1 text-xs font-medium bg-zinc-900/80 backdrop-blur-sm text-white rounded-md">
-                        {product.category}
-                    </span>
-                )}
-            </div>
+                    {/* Badge */}
+                    {product.category && (
+                        <span className="absolute top-3 left-3 px-2 py-1 text-xs font-medium bg-zinc-900/80 backdrop-blur-sm text-white rounded-md">
+                            {product.category}
+                        </span>
+                    )}
+                </div>
+            </Link>
 
             {/* Content Container */}
             <div className="p-5 flex flex-col flex-grow">
@@ -54,9 +63,11 @@ export default function ProductCard({ product }: { product: Product }) {
                 </div>
 
                 {/* Product Title */}
-                <h3 className="font-semibold text-gray-800 text-lg mb-2 leading-tight line-clamp-2 min-h-[3.5rem]">
-                    {product.productName}
-                </h3>
+                <Link href={`/product/${product._id}`}>
+                    <h3 className="font-semibold text-gray-800 text-lg mb-2 leading-tight line-clamp-2 min-h-[3.5rem] hover:text-teal-600 transition-colors">
+                        {product.productName}
+                    </h3>
+                </Link>
 
                 {/* Description Excerpt */}
                 <p className="text-gray-500 text-sm mb-4 line-clamp-2 flex-grow">

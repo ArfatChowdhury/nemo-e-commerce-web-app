@@ -1,6 +1,5 @@
-import getAllProducts from "../../../../lib/getAllProducts";
+import getAllProducts from "@/lib/getAllProducts";
 import ProductCard from "@/app/components/ProductCard";
-import CategorySidebar from "@/app/components/CategorySidebar";
 
 export async function generateStaticParams() {
     const products = await getAllProducts();

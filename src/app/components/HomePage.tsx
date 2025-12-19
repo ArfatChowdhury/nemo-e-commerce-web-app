@@ -1,8 +1,9 @@
-import getAllProducts from "../../../lib/getAllProducts"
+import getAllProducts from "@/lib/getAllProducts"
 import Categories from "./Categories"
 import FlashSale from "./FlashSale"
 import NewArrivels from "./NewArrivels"
 import ProductCard from "./ProductCard"
+import ServiceHighlights from "./ServiceHighlights"
 import TopProducts from "./TopProducts"
 
 export default async function HomePage() {
@@ -11,28 +12,25 @@ export default async function HomePage() {
         <div>
             <div>
                 <h1 className="text-3xl font-bold text-gray-800 mb-8 mt-12 px-4 border-l-4 border-teal-500">
-                    Top Products
+                    Service Highlights
                 </h1>
-                <TopProducts products={products} />
+                <ServiceHighlights />
             </div>
             <div>
-                <h1 className="text-3xl font-bold text-gray-800 mb-8 mt-12 px-4 border-l-4 border-teal-500">
-                    New Arrivels 🔥
-                </h1>
-                <NewArrivels products={products} />
-            </div>
-            <div>
-                <h1 className="text-3xl font-bold text-gray-800 mb-8 mt-12 px-4 border-l-4 border-teal-500">
-                    Flash Sale
-                </h1>
                 <FlashSale products={products} />
             </div>
             <div>
-                <h1 className="text-3xl font-bold text-gray-800 mb-8 mt-12 px-4 border-l-4 border-teal-500">
-                    Shop By Categories
-                </h1>
+
                 <Categories products={products} />
             </div>
+            <div>
+                <TopProducts products={products} />
+            </div>
+            <div>
+                <NewArrivels products={products} />
+            </div>
+
+
         </div>
     )
 }

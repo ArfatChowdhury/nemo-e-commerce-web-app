@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { FiSearch, FiHeart, FiShoppingCart, FiUser, FiMenu } from "react-icons/fi";
+import { FiSearch, FiHeart, FiShoppingCart, FiUser, FiMenu, FiGrid } from "react-icons/fi";
 
 export default function Navbar() {
     return (
@@ -32,7 +32,7 @@ export default function Navbar() {
                     {/* Right Navigation */}
                     <div className="hidden md:flex items-center space-x-8">
                         <Link href="/categories" className="flex items-center space-x-1 hover:text-teal-700 transition-colors group">
-                            <FiHeart size={20} className="group-hover:scale-110 transition-transform" />
+                            <FiGrid size={20} className="group-hover:scale-110 transition-transform" />
                             <span className="font-medium">Categories</span>
                         </Link>
                         <Link href="/wishlist" className="flex items-center space-x-1 hover:text-teal-700 transition-colors group">

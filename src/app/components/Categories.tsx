@@ -12,6 +12,12 @@ export default function Categories({ products }: { products: any }) {
 
     return (
         <section className="py-10">
+
+            <div className="flex justify-between items-center">
+                <h1 className="text-3xl font-bold text-gray-800 mb-8 mt-12 px-4 border-l-4 border-teal-500">
+                    Shop By Categories
+                </h1>
+            </div>
             <div className="flex flex-wrap justify-center gap-4 lg:gap-6">
                 {uniqeCategories().map((category: string) => {
                     const IconComponent = getCategoryIcon(category);
