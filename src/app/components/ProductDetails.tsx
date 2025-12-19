@@ -1,10 +1,8 @@
-'use client';
-
-import React, { useState } from 'react';
-import Image from 'next/image';
-import { FiShoppingCart, FiHeart, FiShield, FiTruck, FiRefreshCw, FiCheck } from 'react-icons/fi';
-import { useAppDispatch } from '@/app/store/hooks';
-import { addToCart, addToWishlist } from '@/app/store/slices/productFormSlice';
+import React from 'react';
+import { FiShield, FiTruck, FiRefreshCw, FiCheck, FiHeart } from 'react-icons/fi';
+import AddToCartButton from './buttons/AddToCartButton';
+import WishlistButton from './buttons/WishlistButton';
+import ProductGallery from './ProductGallery';
 
 interface Product {
     _id: string;
@@ -17,8 +15,6 @@ interface Product {
 }
 
 export default function ProductDetails({ product }: { product: Product }) {
-    const dispatch = useAppDispatch();
-    const [selectedImage, setSelectedImage] = useState(0);
     const images = product.images || ['/placeholder.png'];
 
     const priceDisplay = typeof product.price === 'number'
@@ -30,38 +26,8 @@ export default function ProductDetails({ product }: { product: Product }) {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
                 <div className="flex flex-col lg:flex-row gap-12">
 
-                    {/* Left: Image Gallery */}
-                    <div className="w-full lg:w-1/2 space-y-4">
-                        <div className="relative aspect-square w-full bg-gray-50 rounded-3xl overflow-hidden border border-gray-100">
-                            <Image
-                                src={images[selectedImage]}
-                                alt={product.productName}
-                                fill
-                                className="object-contain p-8"
-                                priority
-                            />
-                        </div>
-
-                        {images.length > 1 && (
-                            <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
-                                {images.map((img, idx) => (
-                                    <button
-                                        key={idx}
-                                        onClick={() => setSelectedImage(idx)}
-                                        className={`relative w-24 h-24 rounded-xl overflow-hidden border-2 transition-all ${selectedImage === idx ? 'border-teal-500 ring-2 ring-teal-100' : 'border-gray-100 hover:border-gray-300'
-                                            }`}
-                                    >
-                                        <Image
-                                            src={img}
-                                            alt={`${product.productName} ${idx + 1}`}
-                                            fill
-                                            className="object-cover"
-                                        />
-                                    </button>
-                                ))}
-                            </div>
-                        )}
-                    </div>
+                    {/* Left: Image Gallery (Client Component) */}
+                    <ProductGallery images={images} productName={product.productName} />
 
                     {/* Right: Product Info */}
                     <div className="w-full lg:w-1/2 flex flex-col">
@@ -90,21 +56,19 @@ export default function ProductDetails({ product }: { product: Product }) {
                             </p>
                         </div>
 
-                        {/* Actions */}
+                        {/* Actions (Client Components) */}
                         <div className="flex flex-col sm:flex-row gap-4 mb-10">
-                            <button
-                                onClick={() => dispatch(addToCart(product))}
+                            <AddToCartButton
+                                product={product}
+                                showLabel={true}
                                 className="flex-1 flex items-center justify-center gap-3 bg-zinc-900 text-white px-8 py-4 rounded-2xl font-bold hover:bg-teal-600 transition-all duration-300 shadow-xl hover:shadow-teal-200 active:scale-[0.98]"
-                            >
-                                <FiShoppingCart size={20} />
-                                Add to Cart
-                            </button>
-                            <button
-                                onClick={() => dispatch(addToWishlist(product))}
-                                className="px-8 py-4 rounded-2xl border-2 border-gray-100 text-gray-600 hover:bg-red-50 hover:border-red-100 hover:text-red-500 transition-all duration-300 active:scale-[0.98]"
-                            >
-                                <FiHeart size={20} />
-                            </button>
+                            />
+
+                            {/* Special styling for Wishlist button in details page */}
+                            <WishlistButton
+                                product={product}
+                                className="px-8 py-4 rounded-2xl border-2 border-gray-100 text-gray-600 hover:bg-red-50 hover:border-red-100 hover:text-red-500 transition-all duration-300 active:scale-[0.98] flex items-center justify-center relative translate-y-0"
+                            />
                         </div>
 
                         {/* Features/Highlights */}
