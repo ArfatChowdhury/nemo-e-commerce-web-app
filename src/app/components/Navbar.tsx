@@ -23,7 +23,7 @@ export default function Navbar() {
                     </div>
 
                     {/* Slogan Section */}
-                    <div className="hidden md:block absolute left-1/2 transform -translate-x-1/2">
+                    <div className="hidden md:block absolute left-180 transform -translate-x-1/2">
                         <span className="text-white font-normal text-xl tracking-[0.3em] uppercase [text-shadow:1px_2px_4px_rgba(0,0,0,0.5)]">
                             R u n - L i k e - N e m o
                         </span>
@@ -31,6 +31,10 @@ export default function Navbar() {
 
                     {/* Right Navigation */}
                     <div className="hidden md:flex items-center space-x-8">
+                        <Link href="/categories" className="flex items-center space-x-1 hover:text-teal-700 transition-colors group">
+                            <FiHeart size={20} className="group-hover:scale-110 transition-transform" />
+                            <span className="font-medium">Categories</span>
+                        </Link>
                         <Link href="/wishlist" className="flex items-center space-x-1 hover:text-teal-700 transition-colors group">
                             <FiHeart size={20} className="group-hover:scale-110 transition-transform" />
                             <span className="font-medium">Wishlist</span>
