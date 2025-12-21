@@ -6,10 +6,22 @@ import Link from 'next/link';
 import { FiTrash2, FiArrowLeft, FiShoppingCart, FiShoppingBag, FiPlus, FiMinus } from 'react-icons/fi';
 import { useAppDispatch, useAppSelector } from '@/app/store/hooks';
 import { removeFromCart, updateQuantity } from '@/app/store/slices/productFormSlice';
+import { useAuth } from '@/app/context/authContext';
+import { useRouter } from 'next/navigation';
 
 export default function CartPage() {
     const dispatch = useAppDispatch();
     const cartItems = useAppSelector((state) => state.productForm.cart);
+    const { user } = useAuth();
+    const router = useRouter();
+
+    const handleCheckUser = () => {
+        if (!user) {
+            router.push('/login?redirect=/cart');
+            return;
+        }
+        router.push('/payment');
+    }
 
     const subtotal = cartItems.reduce((acc, item) => {
         const price = typeof item.price === 'number' ? item.price : parseFloat(item.price) || 0;
@@ -154,11 +166,9 @@ export default function CartPage() {
                                 </div>
                             </div>
 
-                            <Link href="/payment" className="block w-full">
-                                <button className="w-full bg-zinc-900 text-white py-4 rounded-2xl font-bold text-lg hover:bg-teal-600 transition-all duration-300 shadow-xl hover:shadow-teal-100 active:scale-[0.98] mb-4">
-                                    Checkout Now
-                                </button>
-                            </Link>
+                            <button onClick={handleCheckUser} className="w-full bg-zinc-900 text-white py-4 rounded-2xl font-bold text-lg hover:bg-teal-600 transition-all duration-300 shadow-xl hover:shadow-teal-100 active:scale-[0.98] mb-4">
+                                Checkout Now
+                            </button>
 
                             <p className="text-xs text-gray-400 text-center">
                                 Free shipping on orders over $200!

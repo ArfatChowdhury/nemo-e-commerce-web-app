@@ -14,6 +14,7 @@ interface AuthContextType {
     loading: boolean;
     createUser: (email: string, password: string) => Promise<any>;
     signIn: (email: string, password: string) => Promise<any>;
+    logOut: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -32,6 +33,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         return signInWithEmailAndPassword(auth, email, password);
     };
 
+    const logOut = () => {
+        setLoading(true);
+        return auth.signOut();
+    };
+
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
             setUser(currentUser);
@@ -44,7 +50,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         user,
         loading,
         createUser,
-        signIn
+        signIn,
+        logOut
     };
 
     return (

@@ -5,12 +5,15 @@ import Link from 'next/link';
 import { FiCreditCard, FiLock, FiCheckCircle, FiArrowLeft, FiShoppingBag, FiTruck } from 'react-icons/fi';
 import { useAppDispatch, useAppSelector } from '@/app/store/hooks';
 import { checkoutSuccess } from '@/app/store/slices/productFormSlice';
+import { useAuth } from '../context/authContext';
+import { useRouter } from 'next/navigation';
 
 export default function PaymentPage() {
     const dispatch = useAppDispatch();
     const cartItems = useAppSelector((state) => state.productForm.cart);
     const [isProcessing, setIsProcessing] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
+
 
     const subtotal = cartItems.reduce((acc, item) => {
         const price = typeof item.price === 'number' ? item.price : parseFloat(item.price) || 0;
@@ -22,6 +25,7 @@ export default function PaymentPage() {
     const total = subtotal + shipping;
 
     const handlePayment = (e: React.FormEvent) => {
+
         e.preventDefault();
         setIsProcessing(true);
 

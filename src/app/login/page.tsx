@@ -3,12 +3,15 @@
 import React, { useState } from "react"
 import { useAuth } from "../context/authContext"
 import { FiMail, FiLock, FiArrowRight, FiCheckCircle, FiAlertCircle } from "react-icons/fi"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import Link from "next/link"
 
 export default function SignIn() {
     const { signIn } = useAuth()
     const router = useRouter()
+    const searchParams = useSearchParams()
+    const redirectPath = searchParams.get('redirect') || "/"
+
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
     const [success, setSuccess] = useState(false)
@@ -27,7 +30,7 @@ export default function SignIn() {
             setSuccess(true)
 
             setTimeout(() => {
-                router.push("/")
+                router.push(redirectPath)
             }, 1500)
         } catch (err: any) {
             console.error("Auth Error:", err.code, err.message)
@@ -134,7 +137,7 @@ export default function SignIn() {
                         <div className="mt-8 text-center bg-gray-50/50 p-4 rounded-2xl">
                             <p className="text-sm text-gray-500 font-medium">
                                 Don't have an account?{" "}
-                                <Link href="/signup" className="text-teal-600 font-bold hover:text-teal-700 ml-1 underline underline-offset-4 decoration-teal-200">
+                                <Link href={`/signup${redirectPath !== '/' ? `?redirect=${redirectPath}` : ''}`} className="text-teal-600 font-bold hover:text-teal-700 ml-1 underline underline-offset-4 decoration-teal-200">
                                     Create Account
                                 </Link>
                             </p>
