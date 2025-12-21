@@ -3,6 +3,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import {
     createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
     onAuthStateChanged,
     User
 } from "firebase/auth";
@@ -12,6 +13,7 @@ interface AuthContextType {
     user: User | null;
     loading: boolean;
     createUser: (email: string, password: string) => Promise<any>;
+    signIn: (email: string, password: string) => Promise<any>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -25,6 +27,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         return createUserWithEmailAndPassword(auth, email, password);
     };
 
+    const signIn = (email: string, password: string) => {
+        setLoading(true);
+        return signInWithEmailAndPassword(auth, email, password);
+    };
+
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
             setUser(currentUser);
@@ -36,7 +43,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const authInfo = {
         user,
         loading,
-        createUser
+        createUser,
+        signIn
     };
 
     return (
