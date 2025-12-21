@@ -10,7 +10,7 @@ export default function Navbar() {
     const wishlistItems = useAppSelector((state) => state.productForm.wishlist);
 
     return (
-        <nav className="w-full bg-[#d6f0a9] text-gray-800 font-sans shadow-sm pb-4">
+        <nav className="w-full bg-gradient-to-br from-teal-600 to-emerald-700 text-gray-800 font-sans shadow-sm pb-4">
             <div className="max-w-7xl mx-auto px-8 sm:px-12 lg:px-16">
                 {/* Top Row: Logo and Icons */}
                 <div className="flex justify-between items-center h-24 relative">
