@@ -11,11 +11,21 @@ import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 
 const HotDealsCarosuel = () => {
+    const [mounted, setMounted] = React.useState(false);
+
+    React.useEffect(() => {
+        setMounted(true);
+    }, []);
+
     const images = [
         '/banner/carosuel/1-1280x384.png',
         '/banner/carosuel/2-1280x384.png',
         '/banner/carosuel/3-1280x384.png'
     ];
+
+    if (!mounted) {
+        return <div className="w-full h-56 md:h-80 lg:h-96 bg-zinc-100 rounded-xl animate-pulse" />;
+    }
 
     return (
         <div className="w-full">

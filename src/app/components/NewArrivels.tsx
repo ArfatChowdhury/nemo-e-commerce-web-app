@@ -16,7 +16,7 @@ export default function NewArrivels({ products }: { products: any }) {
         <div>
             <div className="flex justify-between items-center">
                 <h1 className="text-3xl font-bold text-gray-800 mb-8 mt-12 px-4 border-l-4 border-teal-500">
-                    New Arrivels 🔥
+                    New Arrivals 🔥
                 </h1>
                 <div className="flex justify-end mt-8 px-4">
                     {limit < products.length && (
