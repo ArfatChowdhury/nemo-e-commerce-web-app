@@ -5,6 +5,7 @@ import NewArrivels from "./NewArrivels"
 import ProductCard from "./ProductCard"
 import ServiceHighlights from "./ServiceHighlights"
 import TopProducts from "./TopProducts"
+import Newsletter from "./Newsletter"
 
 export default async function HomePage() {
     const products = await getAllProducts()
@@ -28,6 +29,9 @@ export default async function HomePage() {
             </div>
             <div>
                 <NewArrivels products={products} />
+            </div>
+            <div>
+                <Newsletter />
             </div>
 
 
