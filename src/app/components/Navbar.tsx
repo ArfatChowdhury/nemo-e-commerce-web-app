@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { FiSearch, FiHeart, FiShoppingCart, FiUser, FiMenu, FiGrid, FiLogOut, FiChevronDown } from "react-icons/fi";
+import { FiSearch, FiHeart, FiShoppingCart, FiUser, FiMenu, FiGrid, FiLogOut, FiChevronDown, FiUsers } from "react-icons/fi";
 import { useAppSelector } from "@/app/store/hooks";
 import { useAuth } from "@/app/context/authContext";
 import { useState, useRef, useEffect } from "react";
@@ -107,6 +107,16 @@ export default function Navbar() {
                                             </div>
                                             Profile Settings
                                         </Link>
+                                    </li>
+                                    <li>
+                                        {userData.role === 'admin' && (
+                                            <Link href="/admin" className="flex items-center gap-3 px-4 py-3.5 text-sm font-bold text-gray-700 hover:bg-teal-50 hover:text-teal-700 rounded-2xl transition-all group mt-2">
+                                                <div className="w-8 h-8 rounded-xl bg-gray-100 group-hover:bg-teal-100 flex items-center justify-center transition-colors">
+                                                    <FiUsers className="text-lg group-hover:scale-110 transition-transform" />
+                                                </div>
+                                                Admin Dashboard
+                                            </Link>
+                                        )}
                                     </li>
                                     <li>
                                         <button onClick={handleLogout} className="flex items-center gap-3 px-4 py-3.5 text-sm font-bold text-red-600 hover:bg-red-50 rounded-2xl transition-all group">

@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/authContext";
 import { FiUser, FiMail, FiPhone, FiMapPin, FiSave, FiEdit2, FiCamera } from "react-icons/fi";
 import { db } from "@/lib/firebase";
-import { doc, updateDoc, serverTimestamp } from "firebase/firestore";
+import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { updateProfile } from "firebase/auth";
 
 export default function ProfilePage() {
@@ -45,14 +45,16 @@ export default function ProfilePage() {
             // Update Firebase Auth Profile
             await updateProfile(user, { displayName: formData.displayName });
 
-            // Update Firestore Document
+            // Update Firestore Document (using setDoc with merge to handle missing docs)
             const userRef = doc(db, "users", user.uid);
-            await updateDoc(userRef, {
+            await setDoc(userRef, {
+                uid: user.uid,
+                email: user.email,
                 displayName: formData.displayName,
                 phoneNumber: formData.phoneNumber,
                 address: formData.address,
                 updatedAt: serverTimestamp(),
-            });
+            }, { merge: true });
 
             setMessage({ type: "success", text: "Profile updated successfully!" });
             setIsEditing(false);
