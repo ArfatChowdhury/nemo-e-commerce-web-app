@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import ProductCard from './ProductCard';
 
-export default function NewArrivels({ products }: { products: any }) {
+export default function NewArrivals({ products }: { products: any }) {
     const [limit, setLimit] = useState(4);
 
     const handleLoadMore = () => {

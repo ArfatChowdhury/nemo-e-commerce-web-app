@@ -48,6 +48,7 @@ function LoginContent() {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-teal-50 to-emerald-100 flex items-center justify-center p-6 relative overflow-hidden">
+
             <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-[500px] h-[500px] bg-teal-200/40 rounded-full blur-3xl"></div>
             <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/4 w-[400px] h-[400px] bg-emerald-200/40 rounded-full blur-3xl"></div>
 
@@ -58,6 +59,10 @@ function LoginContent() {
                         Nemo Squad
                     </h1>
                     <p className="text-teal-700/70 font-medium mt-2">Welcome back! Please login to your account</p>
+                    <div>
+                        <h1 className="text-center text-xl font-bold text-teal-900 tracking-tight flex items-center justify-center gap-2">for admin login use email: arfat@gmail.com and password: 123456</h1>
+
+                    </div>
                 </div>
 
                 <div className="bg-white/80 backdrop-blur-xl border border-white/50 rounded-[2.5rem] p-8 md:p-10 shadow-2xl shadow-teal-900/10">

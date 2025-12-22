@@ -22,7 +22,7 @@ export default function Footer() {
                                 className="brightness-0 invert opacity-90"
                             />
                         </Link>
-                        <p className="text-sm leading-relaxed max-w-xs">
+                        <p className="text-sm leading-loose max-w-xs">
                             Premium grooming and lifestyle products for the modern individual. Run Like Nemo, stay ahead of the curve.
                         </p>
                         <div className="flex gap-4">
@@ -44,7 +44,7 @@ export default function Footer() {
                     {/* Quick Links */}
                     <div>
                         <h3 className="text-white font-bold text-lg mb-6">Quick Links</h3>
-                        <ul className="space-y-4 text-sm">
+                        <ul className="space-y-5 text-sm">
                             <li><Link href="/categories" className="hover:text-teal-400 transition-colors">Browse Categories</Link></li>
                             <li><Link href="/wishlist" className="hover:text-teal-400 transition-colors">My Wishlist</Link></li>
                             <li><Link href="/cart" className="hover:text-teal-400 transition-colors">Shopping Cart</Link></li>
@@ -55,7 +55,7 @@ export default function Footer() {
                     {/* Customer Service */}
                     <div>
                         <h3 className="text-white font-bold text-lg mb-6">Customer Service</h3>
-                        <ul className="space-y-4 text-sm">
+                        <ul className="space-y-5 text-sm">
                             <li><Link href="#" className="hover:text-teal-400 transition-colors">Shipping Policy</Link></li>
                             <li><Link href="#" className="hover:text-teal-400 transition-colors">Returns & Exchanges</Link></li>
                             <li><Link href="#" className="hover:text-teal-400 transition-colors">FAQs</Link></li>
@@ -66,8 +66,8 @@ export default function Footer() {
                     {/* Contact Info */}
                     <div>
                         <h3 className="text-white font-bold text-lg mb-6">Contact Us</h3>
-                        <ul className="space-y-4 text-sm">
-                            <li className="flex items-start gap-3">
+                        <ul className="space-y-5 text-sm">
+                            <li className="flex items-start gap-3 leading-relaxed">
                                 <FiMapPin className="text-teal-500 mt-1 flex-shrink-0" />
                                 <span>123 Grooming St, Style City,<br />SC 12345, United States</span>
                             </li>

@@ -44,11 +44,11 @@ export default function ServiceHighlights() {
                             key={service.id}
                             className="group flex flex-col items-center text-center p-8 bg-white rounded-[2rem] border border-gray-100 shadow-sm hover:shadow-2xl hover:border-teal-100 transition-all duration-500 translate-y-0 hover:-translate-y-2"
                         >
-                            <div className={`flex-shrink-0 w-20 h-20 ${service.color} rounded-full flex items-center justify-center text-3xl group-hover:rotate-[360deg] transition-all duration-700 shadow-inner`}>
+                            <div className={`flex-shrink-0 w-24 h-24 ${service.color} rounded-full flex items-center justify-center text-4xl group-hover:rotate-[360deg] transition-all duration-700 shadow-inner`}>
                                 {service.icon}
                             </div>
                             <div className="mt-6">
-                                <h3 className="text-xl font-extrabold text-gray-900 group-hover:text-teal-700 transition-colors duration-300">
+                                <h3 className="text-2xl font-black text-gray-900 group-hover:text-teal-700 transition-colors duration-300">
                                     {service.title}
                                 </h3>
                                 <p className="text-sm text-gray-500 mt-2 font-medium leading-relaxed max-w-[200px]">
