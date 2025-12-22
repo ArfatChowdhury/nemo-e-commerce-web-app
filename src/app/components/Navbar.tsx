@@ -109,8 +109,8 @@ export default function Navbar() {
                                         </Link>
                                     </li>
                                     <li>
-                                        {userData.role === 'admin' && (
-                                            <Link href="/admin" className="flex items-center gap-3 px-4 py-3.5 text-sm font-bold text-gray-700 hover:bg-teal-50 hover:text-teal-700 rounded-2xl transition-all group mt-2">
+                                        {userData?.role === 'admin' && (
+                                            <Link href="/admindashboard" className="flex items-center gap-3 px-4 py-3.5 text-sm font-bold text-gray-700 hover:bg-teal-50 hover:text-teal-700 rounded-2xl transition-all group mt-2">
                                                 <div className="w-8 h-8 rounded-xl bg-gray-100 group-hover:bg-teal-100 flex items-center justify-center transition-colors">
                                                     <FiUsers className="text-lg group-hover:scale-110 transition-transform" />
                                                 </div>
