@@ -1,9 +1,8 @@
 
 
 export default async function getAllProducts() {
-
-    const result = await fetch('https://backend-of-nemo.vercel.app/products')
-
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://backend-of-nemo.vercel.app';
+    const result = await fetch(`${apiUrl}/products`)
     return result.json()
 }
 

@@ -4,6 +4,7 @@ import React from 'react';
 import { useAppDispatch, useAppSelector } from '@/app/store/hooks';
 import { addToWishlist, removeFromWishlist } from '@/app/store/slices/productFormSlice';
 import { IoHeartOutline, IoHeart } from 'react-icons/io5';
+import { toast } from 'react-hot-toast';
 interface WishlistButtonProps {
     product: any;
     className?: string;
@@ -16,8 +17,24 @@ export default function WishlistButton({ product, className = "" }: WishlistButt
     const toggleWishlist = () => {
         if (isProductInWishlist) {
             dispatch(removeFromWishlist(product));
+            toast.success(`Removed from wishlist`, {
+                icon: '💔',
+                style: {
+                    borderRadius: '1rem',
+                    background: '#333',
+                    color: '#fff',
+                },
+            });
         } else {
             dispatch(addToWishlist(product));
+            toast.success(`Added to wishlist!`, {
+                icon: '❤️',
+                style: {
+                    borderRadius: '1rem',
+                    background: '#333',
+                    color: '#fff',
+                },
+            });
         }
     };
     return (

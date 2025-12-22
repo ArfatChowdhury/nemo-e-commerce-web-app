@@ -4,6 +4,7 @@ import React from 'react';
 import { FiShoppingCart, FiCheck } from 'react-icons/fi';
 import { useAppDispatch, useAppSelector } from '@/app/store/hooks';
 import { addToCart } from '@/app/store/slices/productFormSlice';
+import { toast } from 'react-hot-toast';
 
 interface AddToCartButtonProps {
     product: any;
@@ -25,6 +26,14 @@ export default function AddToCartButton({ product, showLabel = true, className =
                 e.stopPropagation();
                 if (!isInCart) {
                     dispatch(addToCart(product));
+                    toast.success(`${product.productName} added to cart!`, {
+                        icon: '🛒',
+                        style: {
+                            borderRadius: '1rem',
+                            background: '#333',
+                            color: '#fff',
+                        },
+                    });
                 }
             }}
             className={className || `flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium text-sm transition-all duration-300 shadow-md ${isInCart

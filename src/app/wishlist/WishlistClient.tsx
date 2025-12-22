@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { FiHeart, FiTrash2, FiShoppingCart, FiArrowLeft, FiStar } from 'react-icons/fi';
 import { useAppDispatch, useAppSelector } from '@/app/store/hooks';
 import { removeFromWishlist, addToCart } from '@/app/store/slices/productFormSlice';
+import { toast } from 'react-hot-toast';
 
 export default function WishlistClient() {
     const dispatch = useAppDispatch();
@@ -18,19 +19,25 @@ export default function WishlistClient() {
 
     if (wishlistItems.length === 0) {
         return (
-            <div className="min-h-[70vh] flex flex-col items-center justify-center px-4">
-                <div className="w-24 h-24 bg-red-50 rounded-full flex items-center justify-center mb-6">
-                    <FiHeart size={40} className="text-red-200" />
+            <div className="min-h-[70vh] flex flex-col items-center justify-center px-4 text-center">
+                <div className="relative mb-8">
+                    <div className="w-32 h-32 bg-red-50 rounded-full flex items-center justify-center animate-pulse">
+                        <FiHeart size={56} className="text-red-200" />
+                    </div>
+                    <div className="absolute -top-2 -right-2 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center text-red-500 border border-red-50">
+                        <FiStar size={24} className="fill-red-500" />
+                    </div>
                 </div>
-                <h2 className="text-2xl font-bold text-gray-800 mb-2">Your wishlist is empty</h2>
-                <p className="text-gray-500 mb-8 max-w-xs text-center">
+                <h2 className="text-3xl font-black text-gray-900 mb-3">Your wishlist is empty</h2>
+                <p className="text-gray-500 mb-10 max-w-sm leading-relaxed">
                     Saved items will appear here so you can easily find them later and add them to your cart!
                 </p>
                 <Link
                     href="/categories"
-                    className="flex items-center gap-2 bg-zinc-900 text-white px-8 py-3 rounded-xl font-bold hover:bg-teal-600 transition-all active:scale-95 shadow-lg"
+                    className="flex items-center gap-3 bg-zinc-900 text-white px-10 py-4 rounded-2xl font-bold hover:bg-teal-600 transition-all active:scale-95 shadow-2xl shadow-teal-900/20 group"
                 >
-                    Explore Products
+                    <span>Explore Products</span>
+                    <FiArrowLeft className="rotate-180 group-hover:translate-x-1 transition-transform" />
                 </Link>
             </div>
         );
@@ -77,7 +84,13 @@ export default function WishlistClient() {
 
                                     {/* Quick Remove Button */}
                                     <button
-                                        onClick={() => dispatch(removeFromWishlist({ _id: item._id }))}
+                                        onClick={() => {
+                                            dispatch(removeFromWishlist({ _id: item._id }));
+                                            toast.success(`Removed from wishlist`, {
+                                                icon: '💔',
+                                                style: { borderRadius: '1rem', background: '#333', color: '#fff' },
+                                            });
+                                        }}
                                         className="absolute top-3 right-3 p-2 bg-white/90 backdrop-blur-sm text-gray-400 hover:text-red-500 hover:bg-white rounded-full shadow-sm transition-all z-10"
                                         title="Remove from wishlist"
                                     >
@@ -115,7 +128,13 @@ export default function WishlistClient() {
                                     {/* Action Button: Add to Cart */}
                                     <button
                                         disabled={inCart}
-                                        onClick={() => dispatch(addToCart(item))}
+                                        onClick={() => {
+                                            dispatch(addToCart(item));
+                                            toast.success(`${item.productName} moved to cart!`, {
+                                                icon: '🛒',
+                                                style: { borderRadius: '1rem', background: '#333', color: '#fff' },
+                                            });
+                                        }}
                                         className={`w-full mt-auto flex items-center justify-center gap-2 py-3 rounded-xl font-bold transition-all duration-300 active:scale-95 ${inCart
                                             ? "bg-gray-100 text-gray-400 cursor-not-allowed"
                                             : "bg-zinc-900 text-white hover:bg-teal-600 shadow-lg hover:shadow-teal-100"
