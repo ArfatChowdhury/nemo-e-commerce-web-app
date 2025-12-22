@@ -22,55 +22,48 @@ export default function ProductCard({ product }: { product: Product }) {
         : `$${product.price}`;
 
     return (
-        <div className="group relative bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden border border-gray-100 flex flex-col h-full hover:-translate-y-1">
-            {/* Image Container */}
+        <div className="group relative rounded-2xl border border-gray-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg flex flex-col h-full">
+
+            {/* Category badge */}
+            {product.category && (
+                <span className="absolute left-3 top-3 z-10 rounded-full bg-gray-900 px-2.5 py-1 text-[10px] font-bold text-white uppercase tracking-wider">
+                    {product.category}
+                </span>
+            )}
+
+            {/* Wishlist Button */}
+            <div className="absolute top-3 right-3 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <WishlistButton product={product} />
+            </div>
+
+            {/* Image */}
             <Link href={`/product/${product._id}`} className="block">
-                <div className="relative aspect-square w-full bg-gray-50/50 overflow-hidden">
+                <div className="flex h-56 items-center justify-center overflow-hidden rounded-t-2xl bg-gray-50/50 relative">
                     <Image
                         src={imageUrl}
                         alt={product.productName}
                         fill
-                        className="object-contain p-6 group-hover:scale-110 transition-transform duration-700"
+                        className="object-contain p-6 transition-transform duration-500 group-hover:scale-105"
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
-
-                    {/* Overlay Actions (Wishlist) */}
-                    <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <WishlistButton product={product} />
-                    </div>
-
-                    {/* Badge */}
-                    {product.category && (
-                        <span className="absolute top-3 left-3 px-2.5 py-1 text-[10px] font-bold bg-white/90 backdrop-blur-md text-gray-900 rounded-full shadow-sm border border-gray-100 uppercase tracking-wider">
-                            {product.category}
-                        </span>
-                    )}
                 </div>
             </Link>
 
-            {/* Content Container */}
-            <div className="p-5 flex flex-col flex-grow">
-                {/* Product Title */}
+            {/* Content */}
+            <div className="p-4 flex flex-col flex-grow">
                 <Link href={`/product/${product._id}`}>
-                    <h3 className="font-bold text-gray-900 text-lg mb-2 leading-tight line-clamp-2 min-h-[3rem] hover:text-teal-600 transition-colors">
+                    <h3 className="line-clamp-2 text-sm font-semibold text-gray-800 hover:text-teal-600 transition-colors min-h-[2.5rem]">
                         {product.productName}
                     </h3>
                 </Link>
 
-                {/* Description Excerpt */}
-                <p className="text-gray-500 text-xs mb-4 line-clamp-2 flex-grow leading-relaxed">
-                    {product.description}
+                <p className="mt-2 text-xl font-bold text-teal-600">
+                    {priceDisplay}
                 </p>
 
-                {/* Footer: Price and Add Button */}
-                <div className="flex items-center justify-between mt-auto pt-4 border-t border-gray-50">
-                    <div className="flex flex-col">
-                        <span className="text-2xl font-black text-teal-600 tracking-tight">
-                            {priceDisplay}
-                        </span>
-                    </div>
-
-                    <AddToCartButton product={product} showLabel={false} className="w-10 h-10 rounded-full flex items-center justify-center bg-teal-600 hover:bg-zinc-900 text-white transition-all duration-300 shadow-lg shadow-teal-600/20 active:scale-90" />
+                {/* Action */}
+                <div className="mt-4">
+                    <AddToCartButton product={product} className="w-full flex items-center justify-center gap-2 rounded-xl bg-teal-600 py-2.5 text-sm font-bold text-white transition hover:bg-teal-700 active:scale-95 shadow-md hover:shadow-teal-900/10" />
                 </div>
             </div>
         </div>

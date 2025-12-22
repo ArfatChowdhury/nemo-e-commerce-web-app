@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { FiShoppingCart, FiCheck, FiPlus } from 'react-icons/fi';
+import { FiShoppingCart, FiCheck } from 'react-icons/fi';
 import { useAppDispatch, useAppSelector } from '@/app/store/hooks';
 import { addToCart } from '@/app/store/slices/productFormSlice';
 import { toast } from 'react-hot-toast';
@@ -34,33 +34,17 @@ export default function AddToCartButton({ product, showLabel = true, className =
         }
     };
 
-    if (!showLabel) {
-        return (
-            <button
-                disabled={isInCart}
-                onClick={handleAdd}
-                className={className || `w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 ${isInCart
-                    ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                    : "bg-teal-600 hover:bg-zinc-900 text-white shadow-lg active:scale-90"
-                    }`}
-                title={isInCart ? "In Cart" : "Add to Cart"}
-            >
-                {isInCart ? <FiCheck size={18} /> : <FiPlus size={20} />}
-            </button>
-        );
-    }
-
     return (
         <button
             disabled={isInCart}
             onClick={handleAdd}
-            className={className || `flex items-center gap-2 px-6 py-3 rounded-xl font-black text-sm transition-all duration-300 shadow-lg ${isInCart
+            className={className || `flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm transition-all duration-300 shadow-lg ${isInCart
                 ? "bg-gray-100 text-gray-500 cursor-not-allowed border border-gray-200 shadow-none"
                 : "bg-teal-600 hover:bg-zinc-900 text-white hover:shadow-teal-900/20 active:scale-95"
                 }`}
         >
             {isInCart ? <FiCheck size={18} /> : <FiShoppingCart size={18} />}
-            <span>{isInCart ? "Added" : "Add to Cart"}</span>
+            {showLabel && <span>{isInCart ? "Added" : "Add to Cart"}</span>}
         </button>
     );
 }
