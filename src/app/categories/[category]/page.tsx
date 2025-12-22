@@ -1,5 +1,16 @@
 import getAllProducts from "@/lib/getAllProducts";
 import ProductCard from "@/app/components/ProductCard";
+import { Metadata } from "next";
+
+export async function generateMetadata({ params }: { params: Promise<{ category: string }> }): Promise<Metadata> {
+    const { category: encodedCategory } = await params;
+    const category = decodeURIComponent(encodedCategory);
+
+    return {
+        title: `${category} | Nemo E-commerce`,
+        description: `Explore our collection of ${category} at Nemo E-commerce.`,
+    };
+}
 
 export async function generateStaticParams() {
     const products = await getAllProducts();

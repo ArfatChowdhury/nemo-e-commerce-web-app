@@ -7,7 +7,12 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'i.ibb.co',
       },
+      {
+        protocol: 'https',
+        hostname: 'ibb.co',
+      },
     ],
+    unoptimized: true,
   },
 };
 

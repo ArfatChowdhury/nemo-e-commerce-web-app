@@ -69,14 +69,15 @@ export default function EditProduct() {
                 const data = new FormData();
                 data.append("image", file);
 
-                const res = await fetch(`https://api.imgbb.com/1/upload?key=f29449e712111ed5e49dbc6e43c00d09`, {
+                const res = await fetch(`https://api.imgbb.com/1/upload?key=${process.env.NEXT_PUBLIC_IMGBB_API_KEY}`, {
                     method: "POST",
                     body: data,
                 });
 
                 const json = await res.json();
                 if (json.success) {
-                    uploadedUrls.push(json.data.url);
+                    // Use display_url for direct image link
+                    uploadedUrls.push(json.data.display_url);
                 }
             }
             handleInputChange("images", uploadedUrls);
