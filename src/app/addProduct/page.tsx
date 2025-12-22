@@ -6,8 +6,8 @@ import { updateField, resetForm, fetchProducts } from "../store/slices/productFo
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { FiPlus, FiTrash2, FiUploadCloud, FiArrowLeft, FiCheckCircle } from "react-icons/fi";
+import { categoriesList } from "@/lib/categoryData";
 
-const CATEGORIES = ["Electronics", "Clothing", "Home & Kitchen", "Beauty", "Sports", "Books", "Other"];
 const COLORS = [
     { name: "Black", value: "#000000" },
     { name: "White", value: "#FFFFFF" },
@@ -171,7 +171,7 @@ export default function AddProduct() {
                                 <input
                                     type="text"
                                     placeholder="e.g. Wireless Headphones"
-                                    className="input input-bordered w-full focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
+                                    className="input input-bordered w-full bg-white focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
                                     value={formData.productName}
                                     onChange={(e) => handleInputChange("productName", e.target.value)}
                                 />
@@ -183,7 +183,7 @@ export default function AddProduct() {
                                 <input
                                     type="text"
                                     placeholder="e.g. Sony"
-                                    className="input input-bordered w-full focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
+                                    className="input input-bordered w-full bg-white focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
                                     value={formData.brandName}
                                     onChange={(e) => handleInputChange("brandName", e.target.value)}
                                 />
@@ -196,7 +196,7 @@ export default function AddProduct() {
                                     type="number"
                                     placeholder="0.00"
                                     step="0.01"
-                                    className="input input-bordered w-full focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
+                                    className="input input-bordered w-full bg-white focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
                                     value={formData.price}
                                     onChange={(e) => handleInputChange("price", e.target.value)}
                                 />
@@ -208,7 +208,7 @@ export default function AddProduct() {
                                 <input
                                     type="number"
                                     placeholder="0"
-                                    className="input input-bordered w-full focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
+                                    className="input input-bordered w-full bg-white focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
                                     value={formData.stock}
                                     onChange={(e) => handleInputChange("stock", e.target.value)}
                                 />
@@ -219,7 +219,7 @@ export default function AddProduct() {
                                 <span className="label-text font-bold text-gray-700">Description</span>
                             </label>
                             <textarea
-                                className="textarea textarea-bordered h-32 focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
+                                className="textarea textarea-bordered h-32 bg-white focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
                                 placeholder="Describe the product features, specifications, etc."
                                 value={formData.description}
                                 onChange={(e) => handleInputChange("description", e.target.value)}
@@ -239,7 +239,7 @@ export default function AddProduct() {
                                     <span className="label-text font-bold text-gray-700">Category</span>
                                 </label>
                                 <div className="flex flex-wrap gap-2">
-                                    {CATEGORIES.map((cat) => (
+                                    {categoriesList.map((cat) => (
                                         <button
                                             key={cat}
                                             type="button"
@@ -266,9 +266,9 @@ export default function AddProduct() {
                                                 key={color.value}
                                                 type="button"
                                                 onClick={() => toggleColor(color)}
-                                                className={`w-10 h-10 rounded-full border-2 transition-all flex items-center justify-center ${isSelected ? "border-teal-600 scale-110 shadow-sm" : "border-transparent"
+                                                className={`w-10 h-10 rounded-full border-2 transition-all flex items-center justify-center ${isSelected ? "border-teal-600 scale-110 shadow-sm" : "border-gray-200"
                                                     }`}
-                                                style={{ backgroundColor: color.value }}
+                                                style={{ backgroundColor: color.value, boxShadow: color.value === "#FFFFFF" ? "inset 0 0 0 1px rgba(0,0,0,0.1)" : "none" }}
                                                 title={color.name}
                                             >
                                                 {isSelected && (

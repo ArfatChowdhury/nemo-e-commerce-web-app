@@ -6,8 +6,8 @@ import { updateField, resetForm, fetchProducts, Product } from "../store/slices/
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { FiEdit2, FiTrash2, FiUploadCloud, FiArrowLeft, FiCheckCircle, FiSearch, FiPackage } from "react-icons/fi";
+import { categoriesList } from "@/lib/categoryData";
 
-const CATEGORIES = ["Electronics", "Clothing", "Home & Kitchen", "Beauty", "Sports", "Books", "Other"];
 const COLORS = [
     { name: "Black", value: "#000000" },
     { name: "White", value: "#FFFFFF" },
@@ -214,24 +214,24 @@ export default function EditProduct() {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="form-control">
                                     <label className="label"><span className="label-text font-bold">Product Name</span></label>
-                                    <input type="text" className="input input-bordered focus:border-teal-500" value={formData.productName} onChange={(e) => handleInputChange("productName", e.target.value)} />
+                                    <input type="text" className="input input-bordered bg-white focus:border-teal-500" value={formData.productName} onChange={(e) => handleInputChange("productName", e.target.value)} />
                                 </div>
                                 <div className="form-control">
                                     <label className="label"><span className="label-text font-bold">Brand Name</span></label>
-                                    <input type="text" className="input input-bordered focus:border-teal-500" value={formData.brandName} onChange={(e) => handleInputChange("brandName", e.target.value)} />
+                                    <input type="text" className="input input-bordered bg-white focus:border-teal-500" value={formData.brandName} onChange={(e) => handleInputChange("brandName", e.target.value)} />
                                 </div>
                                 <div className="form-control">
                                     <label className="label"><span className="label-text font-bold">Price ($)</span></label>
-                                    <input type="number" step="0.01" className="input input-bordered focus:border-teal-500" value={formData.price} onChange={(e) => handleInputChange("price", e.target.value)} />
+                                    <input type="number" step="0.01" className="input input-bordered bg-white focus:border-teal-500" value={formData.price} onChange={(e) => handleInputChange("price", e.target.value)} />
                                 </div>
                                 <div className="form-control">
                                     <label className="label"><span className="label-text font-bold">Stock</span></label>
-                                    <input type="number" className="input input-bordered focus:border-teal-500" value={formData.stock} onChange={(e) => handleInputChange("stock", e.target.value)} />
+                                    <input type="number" className="input input-bordered bg-white focus:border-teal-500" value={formData.stock} onChange={(e) => handleInputChange("stock", e.target.value)} />
                                 </div>
                             </div>
                             <div className="form-control mt-6">
                                 <label className="label"><span className="label-text font-bold">Description</span></label>
-                                <textarea className="textarea textarea-bordered h-32 focus:border-teal-500" value={formData.description} onChange={(e) => handleInputChange("description", e.target.value)}></textarea>
+                                <textarea className="textarea textarea-bordered h-32 bg-white focus:border-teal-500" value={formData.description} onChange={(e) => handleInputChange("description", e.target.value)}></textarea>
                             </div>
                         </section>
 
@@ -241,8 +241,8 @@ export default function EditProduct() {
                                 <div>
                                     <label className="label"><span className="label-text font-bold">Category</span></label>
                                     <div className="flex flex-wrap gap-2">
-                                        {CATEGORIES.map((cat) => (
-                                            <button key={cat} type="button" onClick={() => handleInputChange("category", cat)} className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${formData.category === cat ? "bg-teal-600 text-white" : "bg-gray-100 text-gray-600"}`}>{cat}</button>
+                                        {categoriesList.map((cat) => (
+                                            <button key={cat} type="button" onClick={() => handleInputChange("category", cat)} className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${formData.category === cat ? "bg-teal-600 text-white shadow-md" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}>{cat}</button>
                                         ))}
                                     </div>
                                 </div>
@@ -252,7 +252,7 @@ export default function EditProduct() {
                                         {COLORS.map((color) => {
                                             const isSelected = formData.colors.find(c => c.value === color.value);
                                             return (
-                                                <button key={color.value} type="button" onClick={() => toggleColor(color)} className={`w-10 h-10 rounded-full border-2 transition-all flex items-center justify-center ${isSelected ? "border-teal-600 scale-110" : "border-transparent"}`} style={{ backgroundColor: color.value }}>
+                                                <button key={color.value} type="button" onClick={() => toggleColor(color)} className={`w-10 h-10 rounded-full border-2 transition-all flex items-center justify-center ${isSelected ? "border-teal-600 scale-110 shadow-sm" : "border-gray-200"}`} style={{ backgroundColor: color.value, boxShadow: color.value === "#FFFFFF" ? "inset 0 0 0 1px rgba(0,0,0,0.1)" : "none" }}>
                                                     {isSelected && <FiCheckCircle className={color.value === "#FFFFFF" ? "text-gray-800" : "text-white"} size={20} />}
                                                 </button>
                                             );
@@ -269,10 +269,10 @@ export default function EditProduct() {
                                 {formData.images.map((url, index) => (
                                     <div key={index} className="relative aspect-square rounded-xl overflow-hidden border border-gray-200 group">
                                         <Image src={url} alt={`Product ${index}`} fill className="object-cover" />
-                                        <button type="button" onClick={() => removeImage(index)} className="absolute top-2 right-2 p-1.5 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"><FiTrash2 size={14} /></button>
+                                        <button type="button" onClick={() => removeImage(index)} className="absolute top-2 right-2 p-1.5 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"><FiTrash2 size={14} /></button>
                                     </div>
                                 ))}
-                                <label className={`aspect-square rounded-xl border-2 border-dashed flex flex-col items-center justify-center cursor-pointer transition-all ${uploadingImages ? "bg-gray-50" : "hover:bg-teal-50 border-gray-300"}`}>
+                                <label className={`aspect-square rounded-xl border-2 border-dashed flex flex-col items-center justify-center cursor-pointer transition-all ${uploadingImages ? "bg-gray-50 border-gray-300" : "hover:bg-teal-50 hover:border-teal-300 border-gray-300"}`}>
                                     <input type="file" multiple accept="image/*" className="hidden" onChange={handleImageUpload} disabled={uploadingImages} />
                                     {uploadingImages ? <span className="loading loading-spinner text-teal-600"></span> : <FiUploadCloud size={24} className="text-gray-400" />}
                                 </label>
@@ -296,7 +296,7 @@ export default function EditProduct() {
                                 <input
                                     type="text"
                                     placeholder="Search products..."
-                                    className="input input-bordered w-full pl-12 rounded-xl focus:border-teal-500"
+                                    className="input input-bordered w-full pl-12 rounded-xl bg-white focus:border-teal-500"
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
                                 />
