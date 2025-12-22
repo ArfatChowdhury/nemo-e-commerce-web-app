@@ -11,7 +11,7 @@ import { useRouter } from "next/navigation";
 export default function Navbar() {
     const cartItems = useAppSelector((state) => state.productForm.cart);
     const wishlistItems = useAppSelector((state) => state.productForm.wishlist);
-    const { user, logOut } = useAuth();
+    const { user, userData, logOut } = useAuth();
     const router = useRouter();
 
     const handleLogout = async () => {
@@ -84,7 +84,7 @@ export default function Navbar() {
                                         {user.email?.[0].toUpperCase()}
                                     </div>
                                     <span className="font-bold text-sm max-w-[100px] truncate">
-                                        {user.displayName || (user.email ? user.email.split('@')[0] : 'Account')}
+                                        {userData?.displayName || user?.displayName || (user?.email ? user.email.split('@')[0] : 'Account')}
                                     </span>
                                     <FiChevronDown className="transition-transform duration-300 text-teal-600 group-focus-within:rotate-180" />
                                 </label>
@@ -96,7 +96,7 @@ export default function Navbar() {
                                             </div>
                                             <div className="flex-1 min-w-0">
                                                 <p className="text-xs font-bold text-teal-600 uppercase tracking-widest leading-none mb-1">Signed in as</p>
-                                                <p className="text-sm font-bold text-gray-900 truncate">{user.email}</p>
+                                                <p className="text-sm font-bold text-gray-900 truncate">{userData?.displayName || user?.displayName || user?.email}</p>
                                             </div>
                                         </div>
                                     </li>

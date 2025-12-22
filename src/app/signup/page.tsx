@@ -27,7 +27,7 @@ export default function SignUp() {
         const password = formData.get('password') as string
 
         try {
-            await createUser(email, password)
+            await createUser(email, password, name)
             setSuccess(true)
 
             setTimeout(() => {
