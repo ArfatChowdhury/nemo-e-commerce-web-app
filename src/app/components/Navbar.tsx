@@ -5,7 +5,7 @@ import Image from "next/image";
 import { FiSearch, FiHeart, FiShoppingCart, FiUser, FiMenu, FiGrid, FiLogOut, FiChevronDown, FiUsers } from "react-icons/fi";
 import { useAppSelector } from "@/app/store/hooks";
 import { useAuth } from "@/app/context/authContext";
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function Navbar() {
@@ -33,9 +33,9 @@ export default function Navbar() {
 
     return (
         <nav className="w-full bg-teal-600 text-white font-sans shadow-lg pb-4 sticky top-0 z-50">
-            <div className="max-w-7xl mx-auto px-8 sm:px-12 lg:px-16">
-                {/* Top Row: Logo and Icons */}
-                <div className="flex justify-between items-center h-24 relative">
+            <div className="max-w-7xl mx-auto px-4 sm:px-12 lg:px-16">
+                {/* Top Row: Logo, Slogan (desktop), Nav (desktop), and Mobile Menu */}
+                <div className="flex justify-between items-center h-24 relative w-full">
                     {/* Logo Section */}
                     <div className="flex-shrink-0 flex items-center">
                         <Link href="/">
@@ -44,20 +44,20 @@ export default function Navbar() {
                                 alt="Nemo"
                                 width={180}
                                 height={60}
-                                className="h-42 w-auto object-contain brightness-0 invert"
+                                className="w-40 md:w-52 h-auto object-contain brightness-0 invert"
                                 priority
                             />
                         </Link>
                     </div>
 
-                    {/* Slogan Section */}
-                    <div className="hidden md:flex absolute left-110 transform -translate-x-1/2 items-center justify-center w-full max-w-[300px] pointer-events-none">
+                    {/* Slogan Section - Desktop Only */}
+                    <div className="hidden md:flex absolute left-1/2 transform -translate-x-1/2 items-center justify-center pointer-events-none">
                         <span className="text-white/90 font-normal text-xl tracking-[0.3em] uppercase [text-shadow:1px_2px_4px_rgba(0,0,0,0.3)] whitespace-nowrap">
                             R u n - L i k e - N e m o
                         </span>
                     </div>
 
-                    {/* Right Navigation */}
+                    {/* Right Navigation - Desktop Only */}
                     <div className="hidden md:flex items-center space-x-8">
                         <Link href="/categories" className="flex items-center space-x-1 hover:text-teal-100 transition-colors group">
                             <FiGrid size={20} className="group-hover:scale-110 transition-transform" />
@@ -143,78 +143,78 @@ export default function Navbar() {
                             </Link>
                         )}
                     </div>
-                </div>
 
-                {/* Mobile Menu Button with counts */}
-                <div className="md:hidden flex items-center gap-4">
-                    <Link href="/cart" className="relative text-white hover:text-teal-100 transition-colors">
-                        <FiShoppingCart size={24} />
-                        {cartItems.length > 0 && (
-                            <span className="absolute -top-2 -right-2 bg-white text-teal-600 text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center shadow-sm animate-bounce">
-                                {cartItems.length}
-                            </span>
-                        )}
-                    </Link>
+                    {/* Mobile Menu - RIGHT SIDE (inside flex row with justify-between) */}
+                    <div className="md:hidden flex items-center gap-4">
+                        <Link href="/cart" className="relative text-white hover:text-teal-100 transition-colors">
+                            <FiShoppingCart size={24} />
+                            {cartItems.length > 0 && (
+                                <span className="absolute -top-2 -right-2 bg-white text-teal-600 text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center shadow-sm animate-bounce">
+                                    {cartItems.length}
+                                </span>
+                            )}
+                        </Link>
 
-                    <div className="dropdown dropdown-end">
-                        <label tabIndex={0} className="btn btn-ghost btn-circle text-white hover:bg-white/20">
-                            <FiMenu size={28} />
-                        </label>
-                        <ul tabIndex={0} className="menu dropdown-content mt-3 z-[100] p-2 shadow-2xl bg-white rounded-2xl w-64 text-gray-800 ring-1 ring-black/5 animate-in fade-in slide-in-from-top-2 duration-200">
-                            <li className="menu-title px-4 py-2 text-teal-600 font-bold uppercase tracking-wider text-xs border-b border-gray-100 mb-2">Navigation</li>
-                            <li>
-                                <Link href="/categories" className="py-3 font-bold hover:bg-teal-50 hover:text-teal-700 rounded-xl">
-                                    <FiGrid className="text-lg" /> Categories
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="/wishlist" className="py-3 font-bold hover:bg-teal-50 hover:text-teal-700 rounded-xl flex justify-between">
-                                    <span className="flex items-center gap-2"><FiHeart className="text-lg" /> Wishlist</span>
-                                    {wishlistItems.length > 0 && <span className="badge badge-sm badge-error text-white">{wishlistItems.length}</span>}
-                                </Link>
-                            </li>
-
-                            <li className="menu-title px-4 py-2 text-teal-600 font-bold uppercase tracking-wider text-xs border-b border-gray-100 mt-2 mb-2">Account</li>
-
-                            {user ? (
-                                <>
-                                    <li>
-                                        <div className="flex items-center gap-3 py-3 bg-teal-50/50 rounded-xl mb-2 pointer-events-none">
-                                            <div className="w-8 h-8 bg-teal-600 rounded-full flex items-center justify-center text-white text-xs font-bold">
-                                                {user.email?.[0].toUpperCase()}
-                                            </div>
-                                            <div className="flex-col items-start gap-0">
-                                                <span className="text-xs font-normal text-gray-500">Signed in as</span>
-                                                <span className="text-sm font-bold truncate max-w-[140px]">{userData?.displayName || user.email?.split('@')[0]}</span>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <Link href="/profile" className="py-3 font-bold hover:bg-teal-50 hover:text-teal-700 rounded-xl">
-                                            <FiUser className="text-lg" /> Profile
-                                        </Link>
-                                    </li>
-                                    {userData?.role === 'admin' && (
-                                        <li>
-                                            <Link href="/admindashboard" className="py-3 font-bold hover:bg-teal-50 hover:text-teal-700 rounded-xl">
-                                                <FiUsers className="text-lg" /> Admin Dashboard
-                                            </Link>
-                                        </li>
-                                    )}
-                                    <li>
-                                        <button onClick={handleLogout} className="py-3 font-bold text-red-600 hover:bg-red-50 hover:text-red-700 rounded-xl">
-                                            <FiLogOut className="text-lg" /> Logout
-                                        </button>
-                                    </li>
-                                </>
-                            ) : (
+                        <div className="dropdown dropdown-end">
+                            <label tabIndex={0} className="btn btn-ghost btn-circle text-white hover:bg-white/20">
+                                <FiMenu size={28} />
+                            </label>
+                            <ul tabIndex={0} className="menu dropdown-content mt-3 z-[100] p-2 shadow-2xl bg-white rounded-2xl w-64 text-gray-800 ring-1 ring-black/5 animate-in fade-in slide-in-from-top-2 duration-200">
+                                <li className="menu-title px-4 py-2 text-teal-600 font-bold uppercase tracking-wider text-xs border-b border-gray-100 mb-2">Navigation</li>
                                 <li>
-                                    <Link href="/login" className="py-3 font-bold bg-teal-600 text-white hover:bg-teal-700 rounded-xl justify-center shadow-lg shadow-teal-900/20 mt-2">
-                                        <FiUser className="text-lg" /> Login / Sign Up
+                                    <Link href="/categories" className="py-3 font-bold hover:bg-teal-50 hover:text-teal-700 rounded-xl">
+                                        <FiGrid className="text-lg" /> Categories
                                     </Link>
                                 </li>
-                            )}
-                        </ul>
+                                <li>
+                                    <Link href="/wishlist" className="py-3 font-bold hover:bg-teal-50 hover:text-teal-700 rounded-xl flex justify-between">
+                                        <span className="flex items-center gap-2"><FiHeart className="text-lg" /> Wishlist</span>
+                                        {wishlistItems.length > 0 && <span className="badge badge-sm badge-error text-white">{wishlistItems.length}</span>}
+                                    </Link>
+                                </li>
+
+                                <li className="menu-title px-4 py-2 text-teal-600 font-bold uppercase tracking-wider text-xs border-b border-gray-100 mt-2 mb-2">Account</li>
+
+                                {user ? (
+                                    <>
+                                        <li>
+                                            <div className="flex items-center gap-3 py-3 bg-teal-50/50 rounded-xl mb-2 pointer-events-none">
+                                                <div className="w-8 h-8 bg-teal-600 rounded-full flex items-center justify-center text-white text-xs font-bold">
+                                                    {user.email?.[0].toUpperCase()}
+                                                </div>
+                                                <div className="flex-col items-start gap-0">
+                                                    <span className="text-xs font-normal text-gray-500">Signed in as</span>
+                                                    <span className="text-sm font-bold truncate max-w-[140px]">{userData?.displayName || user.email?.split('@')[0]}</span>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <Link href="/profile" className="py-3 font-bold hover:bg-teal-50 hover:text-teal-700 rounded-xl">
+                                                <FiUser className="text-lg" /> Profile
+                                            </Link>
+                                        </li>
+                                        {userData?.role === 'admin' && (
+                                            <li>
+                                                <Link href="/admindashboard" className="py-3 font-bold hover:bg-teal-50 hover:text-teal-700 rounded-xl">
+                                                    <FiUsers className="text-lg" /> Admin Dashboard
+                                                </Link>
+                                            </li>
+                                        )}
+                                        <li>
+                                            <button onClick={handleLogout} className="py-3 font-bold text-red-600 hover:bg-red-50 hover:text-red-700 rounded-xl">
+                                                <FiLogOut className="text-lg" /> Logout
+                                            </button>
+                                        </li>
+                                    </>
+                                ) : (
+                                    <li>
+                                        <Link href="/login" className="py-3 font-bold bg-teal-600 text-white hover:bg-teal-700 rounded-xl justify-center shadow-lg shadow-teal-900/20 mt-2">
+                                            <FiUser className="text-lg" /> Login / Sign Up
+                                        </Link>
+                                    </li>
+                                )}
+                            </ul>
+                        </div>
                     </div>
                 </div>
 
