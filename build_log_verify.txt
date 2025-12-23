@@ -1,0 +1,49 @@
+﻿
+> nemo-ecommerce-nextjs@0.1.0 build
+> next build
+
+   Γû▓ Next.js 16.0.10 (Turbopack)
+   - Environments: .env
+
+   Creating an optimized production build ...
+/*! ≡ƒî╝ daisyUI 5.5.14 */
+ Γ£ô Compiled successfully in 9.4s
+   Running TypeScript ...
+   Collecting page data using 7 workers ...
+   Generating static pages using 7 workers (0/45) ...
+   Generating static pages using 7 workers (11/45) 
+   Generating static pages using 7 workers (22/45) 
+   Generating static pages using 7 workers (33/45) 
+ Γ£ô Generating static pages using 7 workers (45/45) in 7.8s
+   Finalizing page optimization ...
+
+Route (app)
+Γöî Γùï /
+Γö£ Γùï /_not-found
+Γö£ Γùï /addProduct
+Γö£ Γùï /admindashboard
+Γö£ Γùï /cart
+Γö£ Γùï /categories
+Γö£ ΓùÅ /categories/[category]
+Γöé Γö£ /categories/Sports & Outdoors
+Γöé Γö£ /categories/Books & Stationery
+Γöé Γö£ /categories/Automotive
+Γöé Γöö [+11 more paths]
+Γö£ Γùï /editProduct
+Γö£ Γùï /login
+Γö£ Γùï /payment
+Γö£ ΓùÅ /product/[id]
+Γöé Γö£ /product/691b1391ef0d6b3e572c6365
+Γöé Γö£ /product/691b1435ef0d6b3e572c6366
+Γöé Γö£ /product/691b166f154971146aaac706
+Γöé Γöö [+12 more paths]
+Γö£ Γùï /profile
+Γö£ Γùï /search
+Γö£ Γùï /signin
+Γö£ Γùï /signup
+Γöö Γùï /wishlist
+
+
+Γùï  (Static)  prerendered as static content
+ΓùÅ  (SSG)     prerendered as static HTML (uses generateStaticParams)
+
