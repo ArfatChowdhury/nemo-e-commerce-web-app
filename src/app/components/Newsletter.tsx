@@ -52,22 +52,22 @@ export default function Newsletter() {
                             ) : (
                                 <form
                                     onSubmit={handleSubmit}
-                                    className="bg-white p-2 rounded-full flex flex-col md:flex-row items-stretch md:items-center gap-2 shadow-2xl w-full max-w-md lg:max-w-lg transition-transform hover:scale-[1.02] duration-300"
+                                    className="bg-white p-2 rounded-3xl md:rounded-full flex flex-col md:flex-row items-stretch md:items-center gap-2 shadow-2xl w-full max-w-md lg:max-w-lg transition-transform hover:scale-[1.02] duration-300"
                                 >
-                                    <div className="flex-1 flex items-center px-4 md:px-6">
-                                        <FiMail className="text-gray-400 text-xl" />
+                                    <div className="flex-1 flex items-center px-4 md:px-6 py-2 md:py-0 bg-gray-50 md:bg-transparent rounded-2xl md:rounded-none">
+                                        <FiMail className="text-gray-400 text-xl flex-shrink-0" />
                                         <input
                                             type="email"
                                             required
                                             value={email}
                                             onChange={(e) => setEmail(e.target.value)}
                                             placeholder="Enter your email address"
-                                            className="w-full py-4 px-3 text-gray-800 placeholder-gray-400 outline-none font-medium"
+                                            className="w-full py-3 md:py-4 px-3 text-gray-800 placeholder-gray-400 outline-none font-medium bg-transparent"
                                         />
                                     </div>
                                     <button
                                         type="submit"
-                                        className="bg-teal-600 hover:bg-teal-700 text-white font-bold py-4 px-10 rounded-full transition-all duration-300 shadow-lg hover:shadow-teal-900/40 flex items-center justify-center gap-2 group/btn"
+                                        className="bg-teal-600 hover:bg-teal-700 text-white font-bold py-4 px-10 rounded-2xl md:rounded-full transition-all duration-300 shadow-lg hover:shadow-teal-900/40 flex items-center justify-center gap-2 group/btn"
                                     >
                                         <span>Subscribe</span>
                                         <FiSend className="group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1 transition-transform" />
