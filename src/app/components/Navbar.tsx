@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { FiSearch, FiHeart, FiShoppingCart, FiUser, FiMenu, FiGrid, FiLogOut, FiChevronDown, FiUsers } from "react-icons/fi";
+import { FiSearch, FiHeart, FiShoppingCart, FiUser, FiMenu, FiGrid, FiLogOut, FiChevronDown, FiUsers, FiPackage } from "react-icons/fi";
 import { useAppSelector } from "@/app/store/hooks";
 import { useAuth } from "@/app/context/authContext";
 import { useState } from "react";
@@ -113,7 +113,15 @@ export default function Navbar() {
                                             <div className="w-8 h-8 rounded-xl bg-gray-100 group-hover:bg-teal-100 flex items-center justify-center transition-colors">
                                                 <FiUser className="text-lg group-hover:scale-110 transition-transform" />
                                             </div>
-                                            Profile Settings
+                                            Profile
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <Link href="/profile/orders" className="flex items-center gap-3 px-4 py-3.5 text-sm font-bold text-gray-700 hover:bg-teal-50 hover:text-teal-700 rounded-2xl transition-all group">
+                                            <div className="w-8 h-8 rounded-xl bg-gray-100 group-hover:bg-teal-100 flex items-center justify-center transition-colors">
+                                                <FiPackage className="text-lg group-hover:scale-110 transition-transform" />
+                                            </div>
+                                            Order History
                                         </Link>
                                     </li>
                                     <li>
@@ -191,6 +199,11 @@ export default function Navbar() {
                                         <li>
                                             <Link href="/profile" className="py-3 font-bold hover:bg-teal-50 hover:text-teal-700 rounded-xl">
                                                 <FiUser className="text-lg" /> Profile
+                                            </Link>
+                                        </li>
+                                        <li>
+                                            <Link href="/profile/orders" className="py-3 font-bold hover:bg-teal-50 hover:text-teal-700 rounded-xl">
+                                                <FiPackage className="text-lg" /> Order History
                                             </Link>
                                         </li>
                                         {userData?.role === 'admin' && (

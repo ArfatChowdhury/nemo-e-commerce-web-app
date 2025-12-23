@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import ProductCard from './ProductCard'
 import { FiClock } from 'react-icons/fi';
+import { useAppSelector } from '../store/hooks';
 
 export default function FlashSale({ products }: { products: any }) {
     const [limit, setLimit] = useState(4);
@@ -12,6 +13,8 @@ export default function FlashSale({ products }: { products: any }) {
         seconds: 15
     });
 
+    const orderHistory = useAppSelector((state: any) => state.productForm.orderHistory);
+    console.log(orderHistory)
     useEffect(() => {
         const timer = setInterval(() => {
             setTimeLeft(prev => {
