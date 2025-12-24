@@ -2,7 +2,7 @@
 
 Nemo E-commerce is a modern, full-stack web application built with **Next.js 15**, **Redux Toolkit**, and **Firebase**. It features a premium design, dynamic metadata for SEO, and a seamless shopping experience.
 
-![Nemo E-commerce Logo](file:///d:/cursor%20projects/NextJs/nemo-ecommerce-nextjs/public/final.png)
+![Nemo E-commerce Logo](file:///d:/cursor%20projects/NextJs/nemo-ecommerce-nextjs/public/nemo-logo-white.png)
 
 ## ✨ Key Features
 
@@ -64,13 +64,6 @@ Nemo E-commerce is a modern, full-stack web application built with **Next.js 15*
    npm run dev
    ```
 
-## 📸 Screenshots
-
-*(Add your screenshots here)*
-
-## 📄 License
-
-This project is licensed under the MIT License.
 
 ---
-Developed with ❤️ by [Your Name]
+Developed with ❤️ by Arfat 
