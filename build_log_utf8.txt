@@ -1,9 +1,0 @@
-﻿
-> nemo-ecommerce-nextjs@0.1.0 build
-> next build
-
-   Γû▓ Next.js 16.0.10 (Turbopack)
-   - Environments: .env
-
-   Creating an optimized production build ...
-/*! ≡ƒî╝ daisyUI 5.5.14 */

@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { FiSearch, FiHeart, FiShoppingCart, FiUser, FiMenu, FiGrid, FiLogOut, FiChevronDown, FiUsers, FiPackage } from "react-icons/fi";
+import { FiSearch, FiHeart, FiShoppingCart, FiUser, FiMenu, FiGrid, FiLogOut, FiChevronDown, FiUsers, FiPackage, FiSmartphone } from "react-icons/fi";
 import { useAppSelector } from "@/app/store/hooks";
 import { useAuth } from "@/app/context/authContext";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import AppDownloadModal from "./AppDownloadModal";
 
 export default function Navbar() {
     const cartItems = useAppSelector((state) => state.productForm.cart);
@@ -14,6 +15,7 @@ export default function Navbar() {
     const { user, userData, logOut } = useAuth();
     const router = useRouter();
     const [searchQuery, setSearchQuery] = useState('');
+    const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
 
     const handleLogout = async () => {
         try {
@@ -51,11 +53,11 @@ export default function Navbar() {
                     </div>
 
                     {/* Slogan Section - Desktop Only */}
-                    <div className="hidden md:flex absolute left-1/2 transform -translate-x-1/2 items-center justify-center pointer-events-none">
+                    {/* <div className="hidden md:flex absolute left-[190px] transform -translate-x-1/2 items-center justify-center pointer-events-none">
                         <span className="text-white/90 font-normal text-xl tracking-[0.3em] uppercase [text-shadow:1px_2px_4px_rgba(0,0,0,0.3)] whitespace-nowrap">
                             R u n - L i k e - N e m o
                         </span>
-                    </div>
+                    </div> */}
 
                     {/* Right Navigation - Desktop Only */}
                     <div className="hidden md:flex items-center space-x-8">
@@ -83,6 +85,16 @@ export default function Navbar() {
                                 </span>
                             )}
                         </Link>
+
+                        {/* Download App Button */}
+                        <button
+                            onClick={() => setIsDownloadModalOpen(true)}
+                            className="flex items-center space-x-1 hover:text-teal-100 transition-colors group"
+                            aria-label="Download App"
+                        >
+                            <FiSmartphone size={20} className="group-hover:scale-110 transition-transform" />
+                            <span className="font-medium">App</span>
+                        </button>
 
                         {/* User Account / Login with DaisyUI Dropdown */}
                         {user ? (
@@ -180,6 +192,11 @@ export default function Navbar() {
                                         {wishlistItems.length > 0 && <span className="badge badge-sm badge-error text-white">{wishlistItems.length}</span>}
                                     </Link>
                                 </li>
+                                <li>
+                                    <button onClick={() => setIsDownloadModalOpen(true)} className="py-3 font-bold hover:bg-teal-50 hover:text-teal-700 rounded-xl w-full text-left">
+                                        <span className="flex items-center gap-2"><FiSmartphone className="text-lg" /> Download App</span>
+                                    </button>
+                                </li>
 
                                 <li className="menu-title px-4 py-2 text-teal-600 font-bold uppercase tracking-wider text-xs border-b border-gray-100 mt-2 mb-2">Account</li>
 
@@ -247,6 +264,8 @@ export default function Navbar() {
                     </form>
                 </div>
             </div>
+            {/* App Download Modal */}
+            <AppDownloadModal isOpen={isDownloadModalOpen} onClose={() => setIsDownloadModalOpen(false)} />
         </nav>
     );
 }

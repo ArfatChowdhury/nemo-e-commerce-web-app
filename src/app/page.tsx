@@ -1,6 +1,7 @@
 
 import HomePage from "./components/HomePage";
 import HotDealsCarosuel from "./components/HotDealsCarosuel";
+import AppDownloadBanner from "./components/AppDownloadBanner";
 import ProductSkeleton from "./components/ProductSkeleton";
 import { Suspense } from "react";
 
@@ -21,6 +22,7 @@ export default function Home() {
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans ">
       <div className="max-w-7xl px-4 py-8 w-full" suppressHydrationWarning>
         <HotDealsCarosuel />
+        <AppDownloadBanner />
         <Suspense fallback={<HomeSkeleton />}>
           <HomePage />
         </Suspense>
