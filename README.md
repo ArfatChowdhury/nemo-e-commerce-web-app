@@ -269,11 +269,6 @@ This project is private and proprietary.
 
 This is a private project. For inquiries, please contact the developer.
 
----
-
-## 📧 Support
-
-For support, email support@nemo.com or visit the live website.
 
 ---
 
