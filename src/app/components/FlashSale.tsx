@@ -14,7 +14,6 @@ export default function FlashSale({ products }: { products: any }) {
     });
 
     const orderHistory = useAppSelector((state: any) => state.productForm.orderHistory);
-    console.log(orderHistory)
     useEffect(() => {
         const timer = setInterval(() => {
             setTimeLeft(prev => {
