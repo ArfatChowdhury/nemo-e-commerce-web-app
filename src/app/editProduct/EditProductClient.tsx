@@ -104,24 +104,85 @@ export default function EditProductClient() {
     };
 
     const handleDelete = async (productId: string) => {
-        if (!confirm("Are you sure you want to delete this product?")) return;
-
-        try {
+        const deleteAction = async () => {
             const response = await fetch(`https://backend-of-nemo.vercel.app/products/${productId}`, {
                 method: "DELETE",
             });
 
-            if (response.ok) {
-                toast.success("Product deleted successfully!");
-                dispatch(fetchProducts());
-            } else {
-                throw new Error("Failed to delete product");
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.message || "Failed to delete product");
             }
-        } catch (error: unknown) {
-            console.error("Error deleting product:", error);
-            const errorMessage = error instanceof Error ? error.message : "Failed to delete product.";
-            toast.error(errorMessage);
-        }
+
+            dispatch(fetchProducts());
+            return "Product removed from inventory";
+        };
+
+        toast.promise(deleteAction(), {
+            loading: 'Deleting product...',
+            success: (msg) => msg,
+            error: (err) => err instanceof Error ? err.message : "Could not delete product",
+        }, {
+            style: {
+                borderRadius: '1.5rem',
+                background: '#1e293b',
+                color: '#fff',
+                fontWeight: 'bold',
+                fontSize: '14px',
+                padding: '16px 24px',
+            },
+            success: {
+                icon: <div className="bg-green-500 p-1.5 rounded-lg"><FiCheckCircle className="text-white" size={16} /></div>,
+            },
+            error: {
+                icon: <div className="bg-red-500 p-1.5 rounded-lg"><FiTrash2 className="text-white" size={16} /></div>,
+            },
+        });
+    };
+
+    const confirmDelete = (productId: string) => {
+        toast((t) => (
+            <div className="flex flex-col gap-4">
+                <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 bg-red-100 text-red-600 rounded-[1.25rem] flex items-center justify-center shadow-inner">
+                        <FiTrash2 size={24} />
+                    </div>
+                    <div>
+                        <p className="font-black text-slate-800 uppercase tracking-tight text-sm">Delete Product?</p>
+                        <p className="text-[11px] text-slate-500 font-medium leading-relaxed max-w-[200px]">
+                            This action is permanent. The product will be removed from your catalog.
+                        </p>
+                    </div>
+                </div>
+                <div className="flex justify-end gap-3 mt-1">
+                    <button
+                        onClick={() => toast.dismiss(t.id)}
+                        className="px-4 py-2.5 text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-slate-600 transition-colors"
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        onClick={() => {
+                            toast.dismiss(t.id);
+                            handleDelete(productId);
+                        }}
+                        className="px-6 py-2.5 text-[10px] font-black uppercase tracking-widest bg-red-500 text-white hover:bg-red-600 rounded-2xl shadow-xl shadow-red-500/20 transition-all hover:scale-105 active:scale-95"
+                    >
+                        Confirm Delete
+                    </button>
+                </div>
+            </div>
+        ), {
+            duration: 6000,
+            position: 'top-center',
+            style: {
+                minWidth: '380px',
+                borderRadius: '2rem',
+                border: '2px solid #fee2e2',
+                padding: '1.5rem',
+                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.15)',
+            }
+        });
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -400,7 +461,7 @@ export default function EditProductClient() {
                                                 <FiEdit2 size={14} className="mr-2" /> Edit
                                             </button>
                                             <button
-                                                onClick={() => handleDelete(product._id)}
+                                                onClick={() => confirmDelete(product._id)}
                                                 className="btn btn-md bg-red-50 text-red-500 border-2 border-red-100 hover:bg-red-500 hover:text-white hover:border-red-500 rounded-xl flex items-center justify-center font-black text-xs uppercase tracking-widest transition-all"
                                             >
                                                 <FiTrash2 size={14} className="mr-2" /> Delete
