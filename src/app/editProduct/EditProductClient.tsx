@@ -2,11 +2,12 @@
 
 import { useState, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
-import { updateField, resetForm, fetchProducts, Product } from "../store/slices/productFormSlice";
+import { updateField, resetForm, fetchProducts, Product, ProductFormState } from "../store/slices/productFormSlice";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { FiEdit2, FiTrash2, FiUploadCloud, FiArrowLeft, FiCheckCircle, FiSearch, FiPackage } from "react-icons/fi";
+import { FiEdit2, FiTrash2, FiUploadCloud, FiArrowLeft, FiCheckCircle, FiSearch, FiPackage, FiPlus } from "react-icons/fi";
 import { categoriesList } from "@/lib/categoryData";
+import { toast } from "react-hot-toast";
 
 const COLORS = [
     { name: "Black", value: "#000000" },
@@ -34,7 +35,7 @@ export default function EditProductClient() {
         dispatch(fetchProducts());
     }, [dispatch]);
 
-    const handleInputChange = (field: any, value: any) => {
+    const handleInputChange = <K extends keyof ProductFormState>(field: K, value: ProductFormState[K]) => {
         dispatch(updateField({ field, value }));
     };
 
@@ -80,9 +81,9 @@ export default function EditProductClient() {
                 }
             }
             handleInputChange("images", uploadedUrls);
-        } catch (error) {
+        } catch (error: unknown) {
             console.error("Image upload failed:", error);
-            alert("Failed to upload images.");
+            toast.error("Failed to upload images.");
         } finally {
             setUploadingImages(false);
         }
@@ -111,14 +112,15 @@ export default function EditProductClient() {
             });
 
             if (response.ok) {
-                alert("Product deleted successfully!");
+                toast.success("Product deleted successfully!");
                 dispatch(fetchProducts());
             } else {
                 throw new Error("Failed to delete product");
             }
-        } catch (error) {
+        } catch (error: unknown) {
             console.error("Error deleting product:", error);
-            alert("Failed to delete product.");
+            const errorMessage = error instanceof Error ? error.message : "Failed to delete product.";
+            toast.error(errorMessage);
         }
     };
 
@@ -149,16 +151,17 @@ export default function EditProductClient() {
             });
 
             if (response.ok) {
-                alert("Product updated successfully!");
+                toast.success("Product updated successfully!");
                 setEditingProduct(null);
                 dispatch(resetForm());
                 dispatch(fetchProducts());
             } else {
                 throw new Error("Failed to update product");
             }
-        } catch (error) {
+        } catch (error: unknown) {
             console.error("Error updating product:", error);
-            alert("Failed to update product.");
+            const errorMessage = error instanceof Error ? error.message : "Failed to update product.";
+            toast.error(errorMessage);
         } finally {
             setIsSubmitting(false);
         }
@@ -178,24 +181,35 @@ export default function EditProductClient() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 pb-20">
+        <div className="min-h-screen bg-[#f8fafc] pb-20">
             {/* Header */}
-            <div className="bg-white border-b sticky top-0 z-20">
-                <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div className="bg-white border-b sticky top-0 z-20 shadow-sm">
+                <div className="max-w-6xl mx-auto px-4 h-20 flex items-center justify-between">
                     <button
                         onClick={() => editingProduct ? cancelEditing() : router.back()}
-                        className="flex items-center text-gray-600 hover:text-teal-600 transition-colors"
+                        className="flex items-center text-slate-600 hover:text-teal-600 transition-all hover:-translate-x-1"
                     >
-                        <FiArrowLeft size={20} className="mr-2" />
-                        <span className="font-medium">{editingProduct ? "Cancel Editing" : "Back"}</span>
+                        <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center mr-3 border border-slate-200">
+                            <FiArrowLeft size={18} />
+                        </div>
+                        <span className="font-semibold">{editingProduct ? "Cancel Editing" : "Back to Dashboard"}</span>
                     </button>
-                    <h1 className="text-xl font-bold text-gray-800">
-                        {editingProduct ? `Editing: ${editingProduct.productName}` : "Manage Products"}
-                    </h1>
-                    <div className="w-20 flex justify-end">
+                    <div className="text-center">
+                        <h1 className="text-2xl font-black text-slate-800 tracking-tight uppercase">
+                            {editingProduct ? "Edit Product" : "Manage Inventory"}
+                        </h1>
+                        <p className="text-xs text-slate-400 font-medium mt-0.5 uppercase">
+                            {editingProduct ? `Updating: ${editingProduct.productName}` : "View and modify your store products"}
+                        </p>
+                    </div>
+                    <div className="w-10 flex justify-end">
                         {!editingProduct && (
-                            <button onClick={() => dispatch(fetchProducts())} className="text-teal-600 hover:rotate-180 transition-transform duration-500">
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <button 
+                                onClick={() => dispatch(fetchProducts())} 
+                                className="w-10 h-10 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center border border-teal-100 hover:bg-teal-100 transition-all hover:rotate-180 duration-500"
+                                title="Refresh Products"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                                 </svg>
                             </button>
@@ -204,56 +218,67 @@ export default function EditProductClient() {
                 </div>
             </div>
 
-            <div className="max-w-6xl mx-auto px-4 mt-8">
+            <div className="max-w-6xl mx-auto px-4 mt-12">
                 {editingProduct ? (
                     /* EDIT FORM VIEW */
-                    <form onSubmit={handleSubmit} className="space-y-8 max-w-4xl mx-auto">
+                    <form onSubmit={handleSubmit} className="space-y-12 max-w-4xl mx-auto">
                         {/* Basic Info */}
-                        <section className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                            <h2 className="text-lg font-bold text-gray-800 mb-6">Product Details</h2>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <section className="bg-white p-8 rounded-[2.5rem] shadow-2xl shadow-slate-200/50 border-2 border-slate-200 relative overflow-hidden group hover:border-teal-500/30 transition-all duration-500">
+                            <div className="absolute top-0 left-0 w-2 h-full bg-teal-500"></div>
+                            <h2 className="text-xl font-black text-slate-800 mb-8 flex items-center">
+                                <span className="w-10 h-10 bg-teal-500 text-white rounded-2xl flex items-center justify-center mr-4 shadow-lg shadow-teal-500/30 rotate-3 group-hover:rotate-0 transition-transform">
+                                    <FiPackage size={20} />
+                                </span>
+                                Product Details
+                            </h2>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                 <div className="form-control">
-                                    <label className="label"><span className="label-text font-bold">Product Name</span></label>
-                                    <input type="text" className="input input-bordered bg-white focus:border-teal-500" value={formData.productName} onChange={(e) => handleInputChange("productName", e.target.value)} />
+                                    <label className="label mb-1"><span className="label-text font-black text-slate-700 uppercase tracking-wider text-[11px]">Product Name</span></label>
+                                    <input type="text" className="input input-lg border-2 border-slate-200 w-full bg-slate-50 focus:bg-white focus:border-teal-500 focus:ring-4 focus:ring-teal-500/10 transition-all rounded-2xl font-medium" value={formData.productName} onChange={(e) => handleInputChange("productName", e.target.value)} />
                                 </div>
                                 <div className="form-control">
-                                    <label className="label"><span className="label-text font-bold">Brand Name</span></label>
-                                    <input type="text" className="input input-bordered bg-white focus:border-teal-500" value={formData.brandName} onChange={(e) => handleInputChange("brandName", e.target.value)} />
+                                    <label className="label mb-1"><span className="label-text font-black text-slate-700 uppercase tracking-wider text-[11px]">Brand Name</span></label>
+                                    <input type="text" className="input input-lg border-2 border-slate-200 w-full bg-slate-50 focus:bg-white focus:border-teal-500 focus:ring-4 focus:ring-teal-500/10 transition-all rounded-2xl font-medium" value={formData.brandName} onChange={(e) => handleInputChange("brandName", e.target.value)} />
                                 </div>
                                 <div className="form-control">
-                                    <label className="label"><span className="label-text font-bold">Price ($)</span></label>
-                                    <input type="number" step="0.01" className="input input-bordered bg-white focus:border-teal-500" value={formData.price} onChange={(e) => handleInputChange("price", e.target.value)} />
+                                    <label className="label mb-1"><span className="label-text font-black text-slate-700 uppercase tracking-wider text-[11px]">Price ($)</span></label>
+                                    <div className="relative">
+                                        <span className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 font-bold">$</span>
+                                        <input type="number" step="0.01" className="input input-lg pl-10 border-2 border-slate-200 w-full bg-slate-50 focus:bg-white focus:border-teal-500 focus:ring-4 focus:ring-teal-500/10 transition-all rounded-2xl font-black text-teal-600" value={formData.price} onChange={(e) => handleInputChange("price", e.target.value)} />
+                                    </div>
                                 </div>
                                 <div className="form-control">
-                                    <label className="label"><span className="label-text font-bold">Stock</span></label>
-                                    <input type="number" className="input input-bordered bg-white focus:border-teal-500" value={formData.stock} onChange={(e) => handleInputChange("stock", e.target.value)} />
+                                    <label className="label mb-1"><span className="label-text font-black text-slate-700 uppercase tracking-wider text-[11px]">Stock Inventory</span></label>
+                                    <input type="number" className="input input-lg border-2 border-slate-200 w-full bg-slate-50 focus:bg-white focus:border-teal-500 focus:ring-4 focus:ring-teal-500/10 transition-all rounded-2xl font-bold text-slate-700" value={formData.stock} onChange={(e) => handleInputChange("stock", e.target.value)} />
                                 </div>
                             </div>
-                            <div className="form-control mt-6">
-                                <label className="label"><span className="label-text font-bold">Description</span></label>
-                                <textarea className="textarea textarea-bordered h-32 bg-white focus:border-teal-500" value={formData.description} onChange={(e) => handleInputChange("description", e.target.value)}></textarea>
+                            <div className="flex flex-col w-full mt-10">
+                                <label className="mb-3 px-1"><span className="text-[11px] font-black text-slate-700 uppercase tracking-[0.2em]">Detailed Description</span></label>
+                                <textarea className="textarea w-full border-2 border-slate-200 h-48 bg-slate-50 focus:bg-white focus:border-teal-500 focus:ring-4 focus:ring-teal-500/10 transition-all rounded-[2.5rem] p-8 text-slate-700 font-medium leading-relaxed resize-none" value={formData.description} onChange={(e) => handleInputChange("description", e.target.value)}></textarea>
                             </div>
                         </section>
 
                         {/* Category & Colors */}
-                        <section className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <section className="bg-white p-8 rounded-[2.5rem] shadow-2xl shadow-slate-200/50 border-2 border-slate-200 relative overflow-hidden group hover:border-purple-500/30 transition-all duration-500">
+                            <div className="absolute top-0 left-0 w-2 h-full bg-purple-500"></div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                                 <div>
-                                    <label className="label"><span className="label-text font-bold">Category</span></label>
-                                    <div className="flex flex-wrap gap-2">
+                                    <label className="label mb-3"><span className="label-text font-black text-slate-700 uppercase tracking-wider text-[11px]">Category</span></label>
+                                    <div className="flex flex-wrap gap-3">
                                         {categoriesList.map((cat) => (
-                                            <button key={cat} type="button" onClick={() => handleInputChange("category", cat)} className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${formData.category === cat ? "bg-teal-600 text-white shadow-md" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}>{cat}</button>
+                                            <button key={cat} type="button" onClick={() => handleInputChange("category", cat)} className={`px-5 py-2.5 rounded-2xl text-[13px] font-bold transition-all border-2 ${formData.category === cat ? "bg-slate-800 border-slate-800 text-white shadow-xl shadow-slate-800/30 -translate-y-1" : "bg-white border-slate-200 text-slate-500 hover:border-slate-300 hover:bg-slate-50"}`}>{cat}</button>
                                         ))}
                                     </div>
                                 </div>
                                 <div>
-                                    <label className="label"><span className="label-text font-bold">Colors</span></label>
-                                    <div className="flex flex-wrap gap-3">
+                                    <label className="label mb-3"><span className="label-text font-black text-slate-700 uppercase tracking-wider text-[11px]">Available Colors</span></label>
+                                    <div className="flex flex-wrap gap-4">
                                         {COLORS.map((color) => {
                                             const isSelected = formData.colors.find(c => c.value === color.value);
                                             return (
-                                                <button key={color.value} type="button" onClick={() => toggleColor(color)} className={`w-10 h-10 rounded-full border-2 transition-all flex items-center justify-center ${isSelected ? "border-teal-600 scale-110 shadow-sm" : "border-gray-200"}`} style={{ backgroundColor: color.value, boxShadow: color.value === "#FFFFFF" ? "inset 0 0 0 1px rgba(0,0,0,0.1)" : "none" }}>
-                                                    {isSelected && <FiCheckCircle className={color.value === "#FFFFFF" ? "text-gray-800" : "text-white"} size={20} />}
+                                                <button key={color.value} type="button" onClick={() => toggleColor(color)} className={`w-12 h-12 rounded-2xl border-4 transition-all flex items-center justify-center relative overflow-hidden group/color ${isSelected ? "border-purple-500 scale-110 shadow-lg shadow-purple-500/20" : "border-slate-100 hover:border-slate-300"}`} style={{ backgroundColor: color.value }}>
+                                                    {isSelected && <FiCheckCircle className={color.value === "#FFFFFF" ? "text-slate-800" : "text-white"} size={24} />}
+                                                    <div className="absolute inset-0 bg-white opacity-0 group-hover/color:opacity-20 transition-opacity"></div>
                                                 </button>
                                             );
                                         })}
@@ -263,91 +288,120 @@ export default function EditProductClient() {
                         </section>
 
                         {/* Images */}
-                        <section className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                            <h2 className="text-lg font-bold text-gray-800 mb-6">Images</h2>
-                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                        <section className="bg-white p-8 rounded-[2.5rem] shadow-2xl shadow-slate-200/50 border-2 border-slate-200 relative overflow-hidden group hover:border-orange-500/30 transition-all duration-500">
+                            <div className="absolute top-0 left-0 w-2 h-full bg-orange-500"></div>
+                            <h2 className="text-xl font-black text-slate-800 mb-8 flex items-center">
+                                <span className="w-10 h-10 bg-orange-500 text-white rounded-2xl flex items-center justify-center mr-4 shadow-lg shadow-orange-500/30 rotate-6 group-hover:rotate-0 transition-transform">
+                                    <FiUploadCloud size={20} />
+                                </span>
+                                Product Gallery
+                            </h2>
+                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
                                 {formData.images.map((url, index) => (
-                                    <div key={index} className="relative aspect-square rounded-xl overflow-hidden border border-gray-200 group">
-                                        <Image src={url} alt={`Product ${index}`} fill className="object-cover" />
-                                        <button type="button" onClick={() => removeImage(index)} className="absolute top-2 right-2 p-1.5 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"><FiTrash2 size={14} /></button>
+                                    <div key={index} className="relative aspect-square rounded-[2rem] overflow-hidden border-2 border-slate-100 group/img hover:border-orange-500/50 transition-all shadow-md">
+                                        <Image src={url} alt={`Product ${index}`} fill className="object-cover group-hover/img:scale-110 transition-transform duration-700" />
+                                        <button type="button" onClick={() => removeImage(index)} className="absolute top-3 right-3 p-2.5 bg-white/90 backdrop-blur text-red-500 rounded-2xl opacity-0 group-hover/img:opacity-100 transition-all shadow-xl hover:bg-red-500 hover:text-white"><FiTrash2 size={16} /></button>
                                     </div>
                                 ))}
-                                <label className={`aspect-square rounded-xl border-2 border-dashed flex flex-col items-center justify-center cursor-pointer transition-all ${uploadingImages ? "bg-gray-50 border-gray-300" : "hover:bg-teal-50 hover:border-teal-300 border-gray-300"}`}>
+                                <label className={`aspect-square rounded-[2rem] border-4 border-dashed flex flex-col items-center justify-center cursor-pointer transition-all ${uploadingImages ? "bg-slate-50 border-slate-200" : "hover:bg-orange-50 hover:border-orange-500/50 border-slate-200"}`}>
                                     <input type="file" multiple accept="image/*" className="hidden" onChange={handleImageUpload} disabled={uploadingImages} />
-                                    {uploadingImages ? <span className="loading loading-spinner text-teal-600"></span> : <FiUploadCloud size={24} className="text-gray-400" />}
+                                    {uploadingImages ? <span className="loading loading-spinner loading-lg text-orange-500"></span> : <FiPlus size={28} className="text-slate-400" />}
                                 </label>
                             </div>
                         </section>
 
-                        <div className="flex gap-4 justify-end">
-                            <button type="button" onClick={cancelEditing} className="btn btn-ghost rounded-xl px-8">Cancel</button>
-                            <button type="submit" disabled={isSubmitting || uploadingImages} className={`btn bg-teal-600 hover:bg-teal-700 text-white border-none rounded-xl px-12 shadow-lg ${isSubmitting ? "loading" : ""}`}>
-                                {isSubmitting ? "Updating..." : "Save Changes"}
+                        <div className="flex gap-6 justify-end pt-8">
+                            <button type="button" onClick={cancelEditing} className="btn btn-lg h-20 px-12 bg-slate-100 hover:bg-slate-200 text-slate-600 border-none rounded-[2rem] font-black uppercase tracking-widest transition-all">Discard Changes</button>
+                            <button
+                                type="submit"
+                                disabled={isSubmitting || uploadingImages}
+                                className={`btn btn-lg h-20 px-16 bg-slate-900 hover:bg-black text-white border-none rounded-[2rem] shadow-2xl shadow-slate-900/40 transition-all hover:scale-105 active:scale-95 flex items-center gap-4 disabled:bg-slate-300 disabled:text-slate-500`}
+                            >
+                                {isSubmitting ? (
+                                    <>
+                                        <span className="loading loading-spinner loading-md"></span>
+                                        <span className="text-lg font-black uppercase tracking-widest">Saving...</span>
+                                    </>
+                                ) : (
+                                    <>
+                                        <span className="text-lg font-black uppercase tracking-widest">Update Product</span>
+                                        <FiCheckCircle size={24} />
+                                    </>
+                                )}
                             </button>
                         </div>
                     </form>
                 ) : (
                     /* LIST VIEW */
-                    <div className="space-y-6">
+                    <div className="space-y-12">
                         {/* Search & Stats */}
-                        <div className="flex flex-col md:flex-row gap-4 items-center justify-between bg-white p-4 rounded-2xl border border-gray-100 shadow-sm">
-                            <div className="relative w-full md:w-96">
-                                <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+                        <div className="flex flex-col md:flex-row gap-6 items-center justify-between bg-white p-8 rounded-[2.5rem] border-2 border-slate-200 shadow-xl shadow-slate-200/50">
+                            <div className="relative w-full md:w-[32rem] group">
+                                <FiSearch className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-teal-500 transition-colors" size={20} />
                                 <input
                                     type="text"
-                                    placeholder="Search products..."
-                                    className="input input-bordered w-full pl-12 rounded-xl bg-white focus:border-teal-500"
+                                    placeholder="Search by product name or brand..."
+                                    className="input input-lg w-full pl-16 pr-8 border-2 border-slate-200 rounded-2xl bg-slate-50 focus:bg-white focus:border-teal-500 focus:ring-4 focus:ring-teal-500/10 transition-all font-medium"
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
                                 />
                             </div>
-                            <div className="flex items-center gap-4 text-sm font-medium text-gray-500">
-                                <span className="flex items-center"><FiPackage className="mr-2" /> {products.length} Total</span>
-                                <span className="w-1 h-1 bg-gray-300 rounded-full"></span>
-                                <span>{filteredProducts.length} Found</span>
+                            <div className="flex items-center gap-8 bg-slate-50 px-8 py-4 rounded-2xl border border-slate-100">
+                                <div className="text-center">
+                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">In Inventory</p>
+                                    <p className="text-2xl font-black text-slate-800 flex items-center justify-center">
+                                        <FiPackage className="mr-3 text-teal-500" size={20} />
+                                        {products.length}
+                                    </p>
+                                </div>
+                                <div className="w-px h-10 bg-slate-200"></div>
+                                <div className="text-center">
+                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Search Result</p>
+                                    <p className="text-2xl font-black text-teal-600">{filteredProducts.length}</p>
+                                </div>
                             </div>
                         </div>
 
                         {/* Products Grid */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                             {filteredProducts.map((product) => (
-                                <div key={product._id} className="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition-shadow group">
-                                    <div className="relative aspect-[4/3] bg-gray-100">
+                                <div key={product._id} className="bg-white rounded-[2.5rem] overflow-hidden border-2 border-slate-200 shadow-xl shadow-slate-200/40 hover:shadow-2xl hover:border-teal-500/30 transition-all duration-500 group">
+                                    <div className="relative aspect-[4/3] bg-slate-100 overflow-hidden">
                                         {product.images?.[0] ? (
                                             <Image
                                                 src={product.images[0]}
                                                 alt={product.productName}
                                                 fill
-                                                className="object-cover group-hover:scale-105 transition-transform duration-500"
+                                                className="object-cover group-hover:scale-110 transition-transform duration-700"
                                             />
                                         ) : (
-                                            <div className="w-full h-full flex items-center justify-center text-gray-300">
+                                            <div className="w-full h-full flex items-center justify-center text-slate-300">
                                                 <FiPackage size={48} />
                                             </div>
                                         )}
-                                        <div className="absolute top-2 right-2 bg-white/90 backdrop-blur px-2 py-1 rounded-lg text-xs font-bold text-teal-600 shadow-sm">
+                                        <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-4 py-2 rounded-2xl text-[10px] font-black text-teal-600 shadow-xl border border-teal-100 uppercase tracking-widest">
                                             {product.category}
                                         </div>
                                     </div>
-                                    <div className="p-4">
-                                        <h3 className="font-bold text-gray-800 truncate mb-1">{product.productName}</h3>
-                                        <p className="text-xs text-gray-500 mb-3">{product.brandName}</p>
-                                        <div className="flex items-center justify-between mb-4">
-                                            <span className="text-lg font-black text-teal-600">${product.price}</span>
-                                            <span className={`text-xs px-2 py-1 rounded-md font-bold ${product.stock > 0 ? "bg-green-50 text-green-600" : "bg-red-50 text-red-600"}`}>
-                                                {product.stock > 0 ? `${product.stock} in stock` : "Out of stock"}
+                                    <div className="p-6">
+                                        <h3 className="font-black text-slate-800 truncate text-lg mb-1 group-hover:text-teal-600 transition-colors">{product.productName}</h3>
+                                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">{product.brandName}</p>
+                                        <div className="flex items-center justify-between mb-6 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                                            <span className="text-2xl font-black text-teal-600 tracking-tighter">${product.price}</span>
+                                            <span className={`text-[10px] px-3 py-1.5 rounded-xl font-black uppercase tracking-widest ${product.stock > 0 ? "bg-green-500/10 text-green-600" : "bg-red-500/10 text-red-600"}`}>
+                                                {product.stock > 0 ? `${product.stock} Units` : "Empty"}
                                             </span>
                                         </div>
-                                        <div className="grid grid-cols-2 gap-2">
+                                        <div className="grid grid-cols-2 gap-4">
                                             <button
                                                 onClick={() => startEditing(product)}
-                                                className="btn btn-sm bg-teal-50 text-teal-600 border-none hover:bg-teal-100 rounded-lg flex items-center justify-center"
+                                                className="btn btn-md bg-slate-900 hover:bg-black text-white border-none rounded-xl flex items-center justify-center font-black text-xs uppercase tracking-widest shadow-lg shadow-slate-900/20"
                                             >
                                                 <FiEdit2 size={14} className="mr-2" /> Edit
                                             </button>
                                             <button
                                                 onClick={() => handleDelete(product._id)}
-                                                className="btn btn-sm bg-red-50 text-red-600 border-none hover:bg-red-100 rounded-lg flex items-center justify-center"
+                                                className="btn btn-md bg-red-50 text-red-500 border-2 border-red-100 hover:bg-red-500 hover:text-white hover:border-red-500 rounded-xl flex items-center justify-center font-black text-xs uppercase tracking-widest transition-all"
                                             >
                                                 <FiTrash2 size={14} className="mr-2" /> Delete
                                             </button>
@@ -358,10 +412,13 @@ export default function EditProductClient() {
                         </div>
 
                         {filteredProducts.length === 0 && (
-                            <div className="text-center py-20 bg-white rounded-3xl border border-dashed border-gray-300">
-                                <FiPackage size={64} className="mx-auto text-gray-200 mb-4" />
-                                <h3 className="text-xl font-bold text-gray-400">No products found</h3>
-                                <p className="text-gray-400 mt-2">Try adjusting your search or add new products.</p>
+                            <div className="text-center py-32 bg-white rounded-[3rem] border-4 border-dashed border-slate-200 shadow-2xl shadow-slate-200/50">
+                                <div className="w-24 h-24 bg-slate-50 rounded-[2rem] flex items-center justify-center mx-auto mb-8 shadow-xl border border-slate-100">
+                                    <FiPackage size={48} className="text-slate-200" />
+                                </div>
+                                <h3 className="text-2xl font-black text-slate-800 uppercase tracking-widest">No matching products</h3>
+                                <p className="text-slate-400 mt-3 font-medium uppercase text-xs tracking-widest">Try a different search term or add new inventory.</p>
+                                <button onClick={() => setSearchQuery("")} className="mt-8 btn bg-teal-500 hover:bg-teal-600 text-white border-none rounded-2xl px-8 font-black uppercase tracking-widest shadow-lg shadow-teal-500/30">Clear Search</button>
                             </div>
                         )}
                     </div>

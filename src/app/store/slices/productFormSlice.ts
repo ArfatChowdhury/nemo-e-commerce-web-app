@@ -17,7 +17,7 @@ export interface Product {
     images: string[];
 }
 
-interface ProductFormState {
+export interface ProductFormState {
     productName: string;
     price: string;
     description: string;
