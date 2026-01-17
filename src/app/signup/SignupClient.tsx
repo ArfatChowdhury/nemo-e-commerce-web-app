@@ -5,6 +5,7 @@ import { useAuth } from "../context/authContext"
 import { FiMail, FiLock, FiArrowRight, FiCheckCircle, FiAlertCircle, FiUser } from "react-icons/fi"
 import { useRouter, useSearchParams } from "next/navigation"
 import Link from "next/link"
+import { toast } from "react-hot-toast"
 
 function SignupContent() {
     const { createUser } = useAuth()
@@ -13,53 +14,61 @@ function SignupContent() {
     const redirectPath = searchParams.get('redirect') || "/"
 
     const [loading, setLoading] = useState(false)
-    const [error, setError] = useState<string | null>(null)
     const [success, setSuccess] = useState(false)
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         setLoading(true)
-        setError(null)
 
-        const formData = new FormData(e.currentTarget)
-        const name = formData.get('name') as string
-        const email = formData.get('email') as string
-        const password = formData.get('password') as string
-        const confirmPassword = formData.get('confirmPassword') as string
+        const signupAction = async () => {
+            const formData = new FormData(e.currentTarget)
+            const name = formData.get('name') as string
+            const email = formData.get('email') as string
+            const password = formData.get('password') as string
+            const confirmPassword = formData.get('confirmPassword') as string
 
-        if (password !== confirmPassword) {
-            setError("Passwords do not match")
-            setLoading(false)
-            return
-        }
-
-        if (password.length < 6) {
-            setError("Password must be at least 6 characters")
-            setLoading(false)
-            return
-        }
-
-        try {
-            await createUser(email, password, name)
-            setSuccess(true)
-
-            setTimeout(() => {
-                router.push(redirectPath)
-            }, 1500)
-        } catch (err: any) {
-            console.error("Auth Error:", err.code, err.message)
-            if (err.code === 'auth/email-already-in-use') {
-                setError("Email is already registered. Please login instead.")
-            } else if (err.code === 'auth/invalid-email') {
-                setError("Invalid email address.")
-            } else if (err.code === 'auth/weak-password') {
-                setError("Password is too weak.")
-            } else {
-                setError("Something went wrong. Please try again.")
+            if (password !== confirmPassword) {
+                throw new Error("Passwords do not match")
             }
-        } finally {
-            setLoading(false)
+
+            if (password.length < 6) {
+                throw new Error("Password must be at least 6 characters")
+            }
+
+            try {
+                await createUser(email, password, name)
+                setSuccess(true)
+                setTimeout(() => {
+                    router.push(redirectPath)
+                }, 1000)
+                return "Account created successfully!"
+            } catch (err: unknown) {
+                const error = err as { code?: string };
+                if (error.code === 'auth/email-already-in-use') {
+                    throw new Error("Email is already registered.")
+                } else if (error.code === 'auth/invalid-email') {
+                    throw new Error("Invalid email address.")
+                } else if (error.code === 'auth/weak-password') {
+                    throw new Error("Password is too weak.")
+                }
+                throw err
+            }
         }
+
+        toast.promise(signupAction(), {
+            loading: 'Creating your account...',
+            success: (msg) => msg,
+            error: (err) => err instanceof Error ? err.message : "Registration failed.",
+        }, {
+            style: {
+                borderRadius: '1rem',
+                background: '#1e293b',
+                color: '#fff',
+                fontWeight: 'bold'
+            }
+        }).finally(() => {
+            setLoading(false)
+        })
     }
 
     return (
@@ -90,12 +99,6 @@ function SignupContent() {
                         </div>
                     ) : (
                         <form onSubmit={handleSubmit} className="space-y-6">
-                            {error && (
-                                <div className="bg-red-50 border border-red-100 text-red-600 px-4 py-3 rounded-2xl text-sm font-medium flex items-center gap-3 animate-shake">
-                                    <FiAlertCircle className="text-lg flex-shrink-0" />
-                                    <span>{error}</span>
-                                </div>
-                            )}
 
                             <div className="space-y-2">
                                 <label className="text-sm font-bold text-gray-700 ml-1">Full Name</label>

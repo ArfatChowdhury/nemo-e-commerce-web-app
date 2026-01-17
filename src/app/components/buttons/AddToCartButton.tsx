@@ -3,11 +3,11 @@
 import React from 'react';
 import { FiShoppingCart, FiCheck } from 'react-icons/fi';
 import { useAppDispatch, useAppSelector } from '@/app/store/hooks';
-import { addToCart } from '@/app/store/slices/productFormSlice';
+import { addToCart, Product } from '@/app/store/slices/productFormSlice';
 import { toast } from 'react-hot-toast';
 
 interface AddToCartButtonProps {
-    product: any;
+    product: Product;
     showLabel?: boolean;
     className?: string;
 }
@@ -16,7 +16,7 @@ export default function AddToCartButton({ product, showLabel = true, className =
     const dispatch = useAppDispatch();
     const cartItems = useAppSelector((state) => state.productForm.cart);
 
-    const isInCart = cartItems.some((item: any) => item._id === product._id);
+    const isInCart = cartItems.some((item: Product) => item._id === product._id);
 
     const handleAdd = (e: React.MouseEvent) => {
         e.preventDefault();

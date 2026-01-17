@@ -2,17 +2,17 @@
 
 import React from 'react';
 import { useAppDispatch, useAppSelector } from '@/app/store/hooks';
-import { addToWishlist, removeFromWishlist } from '@/app/store/slices/productFormSlice';
+import { addToWishlist, removeFromWishlist, Product } from '@/app/store/slices/productFormSlice';
 import { IoHeartOutline, IoHeart } from 'react-icons/io5';
 import { toast } from 'react-hot-toast';
 interface WishlistButtonProps {
-    product: any;
+    product: Product;
     className?: string;
 }
 
 export default function WishlistButton({ product, className = "" }: WishlistButtonProps) {
     const dispatch = useAppDispatch();
-    const isProductInWishlist = useAppSelector((state) => state.productForm.wishlist.some((item: any) => item._id === product._id));
+    const isProductInWishlist = useAppSelector((state) => state.productForm.wishlist.some((item: Product) => item._id === product._id));
 
     const toggleWishlist = () => {
         if (isProductInWishlist) {

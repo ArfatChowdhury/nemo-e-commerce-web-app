@@ -6,12 +6,12 @@ import { FiUser, FiMail, FiPhone, FiMapPin, FiSave, FiEdit2, FiCamera } from "re
 import { db } from "@/lib/firebase";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { updateProfile } from "firebase/auth";
+import { toast } from "react-hot-toast";
 
 export default function ProfileClient() {
     const { user, userData, loading: authLoading } = useAuth();
     const [isEditing, setIsEditing] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [message, setMessage] = useState({ type: "", text: "" });
 
     const [formData, setFormData] = useState({
         displayName: "",
@@ -39,13 +39,12 @@ export default function ProfileClient() {
         if (!user) return;
 
         setLoading(true);
-        setMessage({ type: "", text: "" });
 
-        try {
+        const updateAction = async () => {
             // Update Firebase Auth Profile
             await updateProfile(user, { displayName: formData.displayName });
 
-            // Update Firestore Document (using setDoc with merge to handle missing docs)
+            // Update Firestore Document
             const userRef = doc(db, "users", user.uid);
             await setDoc(userRef, {
                 uid: user.uid,
@@ -56,14 +55,23 @@ export default function ProfileClient() {
                 updatedAt: serverTimestamp(),
             }, { merge: true });
 
-            setMessage({ type: "success", text: "Profile updated successfully!" });
             setIsEditing(false);
-        } catch (error: any) {
-            console.error("Update Error:", error);
-            setMessage({ type: "error", text: error.message || "Failed to update profile." });
-        } finally {
+            return "Profile updated successfully!";
+        };
+
+        toast.promise(updateAction(), {
+            loading: 'Saving changes...',
+            success: (msg) => msg,
+            error: (err) => err instanceof Error ? err.message : "Failed to update profile.",
+        }, {
+            style: {
+                borderRadius: '1rem',
+                background: '#333',
+                color: '#fff',
+            }
+        }).finally(() => {
             setLoading(false);
-        }
+        });
     };
 
     if (authLoading) {
@@ -124,13 +132,6 @@ export default function ProfileClient() {
                                 </button>
                             )}
                         </div>
-
-                        {message.text && (
-                            <div className={`mb-8 p-4 rounded-2xl font-bold text-sm flex items-center gap-3 ${message.type === "success" ? "bg-emerald-50 text-emerald-700 border border-emerald-100" : "bg-red-50 text-red-700 border border-red-100"
-                                }`}>
-                                {message.text}
-                            </div>
-                        )}
 
                         <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div className="space-y-2">

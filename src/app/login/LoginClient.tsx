@@ -5,6 +5,7 @@ import { useAuth } from "../context/authContext"
 import { FiMail, FiLock, FiArrowRight, FiCheckCircle, FiAlertCircle } from "react-icons/fi"
 import { useRouter, useSearchParams } from "next/navigation"
 import Link from "next/link"
+import { toast } from "react-hot-toast"
 
 function LoginContent() {
     const { signIn } = useAuth()
@@ -13,37 +14,49 @@ function LoginContent() {
     const redirectPath = searchParams.get('redirect') || "/"
 
     const [loading, setLoading] = useState(false)
-    const [error, setError] = useState<string | null>(null)
     const [success, setSuccess] = useState(false)
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         setLoading(true)
-        setError(null)
 
-        const formData = new FormData(e.currentTarget)
-        const email = formData.get('email') as string
-        const password = formData.get('password') as string
+        const loginAction = async () => {
+            const formData = new FormData(e.currentTarget)
+            const email = formData.get('email') as string
+            const password = formData.get('password') as string
 
-        try {
-            await signIn(email, password)
-            setSuccess(true)
-
-            setTimeout(() => {
-                router.push(redirectPath)
-            }, 1500)
-        } catch (err: any) {
-            console.error("Auth Error:", err.code, err.message)
-            if (err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') {
-                setError("Invalid email or password. Please try again.")
-            } else if (err.code === 'auth/too-many-requests') {
-                setError("Too many failed attempts. Please try again later.")
-            } else {
-                setError("Something went wrong. Please check your credentials.")
+            try {
+                await signIn(email, password)
+                setSuccess(true)
+                setTimeout(() => {
+                    router.push(redirectPath)
+                }, 1000)
+                return "Successfully signed in!"
+            } catch (err: unknown) {
+                const error = err as { code?: string };
+                if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
+                    throw new Error("Invalid email or password.")
+                } else if (error.code === 'auth/too-many-requests') {
+                    throw new Error("Too many attempts. Try again later.")
+                }
+                throw err
             }
-        } finally {
-            setLoading(false)
         }
+
+        toast.promise(loginAction(), {
+            loading: 'Verifying credentials...',
+            success: (msg) => msg,
+            error: (err) => err instanceof Error ? err.message : "Authentication failed.",
+        }, {
+            style: {
+                borderRadius: '1rem',
+                background: '#1e293b',
+                color: '#fff',
+                fontWeight: 'bold'
+            }
+        }).finally(() => {
+            setLoading(false)
+        })
     }
 
     return (
@@ -78,13 +91,6 @@ function LoginContent() {
                         </div>
                     ) : (
                         <form onSubmit={handleSubmit} className="space-y-6">
-                            {error && (
-                                <div className="bg-red-50 border border-red-100 text-red-600 px-4 py-3 rounded-2xl text-sm font-medium flex items-center gap-3 animate-shake">
-                                    <FiAlertCircle className="text-lg flex-shrink-0" />
-                                    <span>{error}</span>
-                                </div>
-                            )}
-
                             <div className="space-y-2">
                                 <label className="text-sm font-bold text-gray-700 ml-1">Email Address</label>
                                 <div className="relative group">
@@ -136,7 +142,7 @@ function LoginContent() {
                     {!success && (
                         <div className="mt-8 text-center bg-gray-50/50 p-4 rounded-2xl">
                             <p className="text-sm text-gray-500 font-medium">
-                                Don't have an account?{" "}
+                                Don&apos;t have an account?{" "}
                                 <Link href={`/signup${redirectPath !== '/' ? `?redirect=${redirectPath}` : ''}`} className="text-teal-600 font-bold hover:text-teal-700 ml-1 underline underline-offset-4 decoration-teal-200">
                                     Create Account
                                 </Link>
